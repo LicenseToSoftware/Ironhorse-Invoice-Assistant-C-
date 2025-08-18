@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironhorse Invoice Assistant C#", "Ironhorse Invoice Assistant C#.csproj", "{049BDAAD-66FC-2499-B854-A562228B241C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{049BDAAD-66FC-2499-B854-A562228B241C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{049BDAAD-66FC-2499-B854-A562228B241C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{049BDAAD-66FC-2499-B854-A562228B241C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{049BDAAD-66FC-2499-B854-A562228B241C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B69461F4-AFE2-418C-A9F4-7CE17625AAC0}
+	EndGlobalSection
+EndGlobal

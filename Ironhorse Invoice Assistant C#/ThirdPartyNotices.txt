@@ -1,0 +1,10 @@
+THIRD-PARTY NOTICES
+
+This product includes the following third-party software:
+
+1) ImageSharp (by SixLabors)
+   Website: https://sixlabors.com/products/imagesharp/
+   License: SixLabors Split License (SLSL) Version 1.0
+   - Apache License 2.0 applies to qualifying use cases
+   - Commercial license applies to entities exceeding $1M USD annual revenue
+   License text: licenses/ImageSharp-LICENSE.txt

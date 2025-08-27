@@ -55,7 +55,7 @@
             buttonResizeImages.TabIndex = 1;
             buttonResizeImages.Text = "Resize Images";
             buttonResizeImages.UseVisualStyleBackColor = true;
-            buttonResizeImages.Click += test_Click;
+            buttonResizeImages.Click += resizePhoto_Click;
             // 
             // textBoxSource
             // 

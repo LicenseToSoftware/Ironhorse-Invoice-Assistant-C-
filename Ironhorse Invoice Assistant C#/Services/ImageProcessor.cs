@@ -1,20 +1,38 @@
-﻿using System;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
+using SharpImage = SixLabors.ImageSharp.Image;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Ironhorse_Invoice_Assistant_C_.Services
 {
-    // This class is a placeholder for image processing functionality.
-    // It can be expanded with methods to handle image resizing, filtering, etc.
     public class ImageProcessor
     {
-        // Example method to process an image (to be implemented)
-        public void ProcessImage(string imagePath)
+        public void ResizeImageJPG(string sourcePath, string destinationPath)
         {
-            // Image processing logic goes here
-            Console.WriteLine($"Processing image: {imagePath}");
+            // Placeholder for image resizing logic
+            // This method should resize the image at sourcePath to the specified quality
+            // and save it to destinationPath.
+            // Implementation would typically use an image processing library like ImageSharp or System.Drawing.
+
+            using (SharpImage image = SharpImage.Load(sourcePath))
+            {
+                // Save with quality level (90 is usually a good balance)
+                var encoder = new JpegEncoder
+                {
+                    Quality = 90 // range 0–100, higher = better quality, larger file
+                };
+
+                image.Save(destinationPath, encoder);
+            }
+
         }
+
+
     }
-{
-	public Class1()
-	{
-	}
 }

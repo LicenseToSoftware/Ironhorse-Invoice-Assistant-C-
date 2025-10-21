@@ -1,4 +1,4 @@
-using Ironhorse_Invoice_Assistant_C_.Services;
+using IronhorseInvoiceAssistant.Services;
 using System.Windows.Forms;
 
 // TODO: for helper methods to be moved later
@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace Ironhorse_Invoice_Assistant_C_
+namespace IronhorseInvoiceAssistant
 {
     public partial class MainWindow : Form
     {
@@ -108,4 +108,4 @@ namespace Ironhorse_Invoice_Assistant_C_
 
 
 
-} // End Name Space Ironhorse_Invoice_Assistant_C_
+} // End Name Space IronhorseInvoiceAssistant

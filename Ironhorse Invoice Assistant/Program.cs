@@ -1,4 +1,4 @@
-namespace Ironhorse_Invoice_Assistant_C_
+namespace IronhorseInvoiceAssistant
 {
     internal static class Program
     {

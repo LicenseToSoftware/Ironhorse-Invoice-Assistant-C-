@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ironhorse_Invoice_Assistant_C_.Services
+namespace IronhorseInvoiceAssistant.Services
 {
     public class ImageProcessor
     {

@@ -20,65 +20,80 @@ namespace IronhorseInvoiceAssistant.Services
         /// <param name="destinationFolder">The folder to save resized images.</param>
         /// <param name="resizeWidth">Width to resize to (default = 800).</param>
         /// <param name="resizeHeight">Height to resize to (default = 600).</param>
-        public static void ProcessFolder(string sourceFolder, string destinationFolder)
-        {
-            sourceFolder = sourceFolder.Trim();
-            destinationFolder = destinationFolder.Trim();
-            int resizeWidth = 800;
-            int resizeHeight = 600;
-            try
+        public sealed record ImageProcessResult(
+            string sourceFolder,
+            string destinationFolder,
+            bool Success,
+            string? ErrorMessage = null
+            );
+
+            public static List<ImageProcessResult> ProcessFolder
+                (
+                string sourceFolder,
+                string destinationFolder,
+                int maxWidth = 1600,
+                int maxHeight = 1600,
+                int quality = 90,
+                bool includeSubfolders = false,
+                bool overwrite = true
+                )
             {
+                if (string.IsNullOrWhiteSpace(sourceFolder))
+                    throw new ArgumentException("Source folder is required.", nameof(sourceFolder));
+
+                if (string.IsNullOrWhiteSpace(destinationFolder))
+                    throw new ArgumentException("Destination folder is required.", nameof(destinationFolder));
+
+                sourceFolder = sourceFolder.Trim();
+                destinationFolder = destinationFolder.Trim();
+
                 if (!Directory.Exists(sourceFolder))
-                {
-                    MessageBox.Show("Source folder not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                    throw new DirectoryNotFoundException($"Source folder not found: {sourceFolder}");
 
-                if (!Directory.Exists(destinationFolder))
-                {
-                    MessageBox.Show("Destination folder not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
 
-                var supportedExtensions = new[] { ".jpg", ".jpeg", ".png", ".bmp" };
-                var files = Directory.GetFiles(sourceFolder)
-                                     .Where(f => supportedExtensions.Contains(Path.GetExtension(f).ToLower()));
+                var supported = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                { ".jpg", ".jpeg", ".png", ".bmp" };
+
+                var searchOption = includeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+                var files = Directory.EnumerateFiles(sourceFolder, "*.*", searchOption)
+                                     .Where(f => supported.Contains(Path.GetExtension(f)));
+
+
+                var processor = new ImageProcessor();
+                var results = new List<ImageProcessResult>();
 
                 foreach (var file in files)
                 {
                     try
                     {
-                        using (var image = SixLabors.ImageSharp.Image.Load(file))
+                        // Keep same filename, but force .jpg extension since we're saving JPEG
+                        var destFileName = Path.ChangeExtension(Path.GetFileName(file), ".jpg");
+                        var destPath = Path.Combine(destinationFolder, destFileName);
+
+                        if (!overwrite && File.Exists(destPath))
                         {
-                            image.Mutate(x => x.Resize(resizeWidth, resizeHeight));
-
-                            string fileName = Path.GetFileName(file);
-                            string destinationPath = Path.Combine(destinationFolder, fileName);
-
-                            image.Save(destinationPath, new JpegEncoder { Quality = 85 }); // You can tweak Quality
+                            results.Add(new ImageProcessResult(file, destPath, false, "Skipped (already exists)."));
+                            continue;
                         }
-                    }
-                    catch (UnauthorizedAccessException uaEx)
-                    {
-                        MessageBox.Show($"Access denied to file: {file}\n\n{uaEx.Message}", "Access Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    catch (IOException ioEx)
-                    {
-                        MessageBox.Show($"I/O error with file: {file}\n\n{ioEx.Message}", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                        processor.ResizeAndSaveJpeg(
+                            sourcePath: file,
+                            destinationPath: destPath,
+                            maxWidth: maxWidth,
+                            maxHeight: maxHeight,
+                            quality: quality
+                        );
+
+                        results.Add(new ImageProcessResult(file, destPath, true));
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Unexpected error processing file: {file}\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        results.Add(new ImageProcessResult(file, "", false, ex.Message));
                     }
                 }
 
-                MessageBox.Show("Image processing complete.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Fatal error:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return results;
             }
         }
     }
-}
-

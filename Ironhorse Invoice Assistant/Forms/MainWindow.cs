@@ -40,9 +40,73 @@ namespace IronhorseInvoiceAssistant
         } // End Method SelectFolder_Click
 
         // TODO: fix this method, i need to make show folders are able to be read and write!
-        private void resizePhoto_Click(object sender, EventArgs e)
+        private async void resizePhoto_Click(object sender, EventArgs e)
         {
-            ImageBatchProcessor.ProcessFolder(SelectedSourcePath, SelectedDestinationPath);
+
+                if (string.IsNullOrWhiteSpace(SelectedSourcePath) || string.IsNullOrWhiteSpace(SelectedDestinationPath))
+                {
+                    MessageBox.Show("Please select both source and destination folders before processing.", 
+                        "Error", 
+                        MessageBoxButtons.OK, 
+                        MessageBoxIcon.Error);
+                    return;
+                }
+               
+
+
+            var button = sender as Button;
+            try
+            {
+                // UI feedback
+                button?.Invoke(() => button.Enabled = false);
+                var previousCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
+
+                // Run processing off the UI thread
+                var results = await Task.Run(() => ImageBatchProcessor.ProcessFolder(SelectedSourcePath, SelectedDestinationPath));
+
+                int total = results.Count;
+                int success = results.Count(r => r.Success);
+                int failed = total - success;
+
+                if (total == 0)
+                {
+                    MessageBox.Show("No supported image files were found in the selected source folder.", "No files", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                if (failed == 0)
+                {
+                    MessageBox.Show($"All {total} images were resized and saved to:\n{SelectedDestinationPath}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // Some failed — show summary and details
+                var failedItems = results.Where(r => !r.Success).ToList();
+                var sb = new System.Text.StringBuilder();
+                sb.AppendLine($"Resized {success} of {total} images. {failed} failed.");
+                sb.AppendLine();
+                sb.AppendLine("Errors (Showing the first 25):");
+                foreach (var item in failedItems.Take(25))
+                {
+                    var src = string.IsNullOrEmpty(item.sourceFolder) ? "(unknown source)" : item.sourceFolder;
+                    var msg = string.IsNullOrEmpty(item.ErrorMessage) ? "(no message)" : item.ErrorMessage;
+                    sb.AppendLine($"{Path.GetFileName(src)} - {msg}");
+                }
+                if (failedItems.Count > 25)
+                {
+                    sb.AppendLine($"...and {failedItems.Count - 25} more.");
+                }
+
+                // Show the aggregated error information
+                MessageBox.Show(sb.ToString(), "Partial Completion - Errors Occurred", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            finally
+            {
+                button?.Invoke(() => button.Enabled = true);
+                Cursor.Current = Cursors.Default;
+            }
+        
         } 
 
         private void testOutput_TextChanged(object sender, EventArgs e)

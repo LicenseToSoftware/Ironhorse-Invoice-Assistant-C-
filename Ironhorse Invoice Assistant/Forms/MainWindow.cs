@@ -86,7 +86,7 @@ namespace IronhorseInvoiceAssistant
                 var sb = new System.Text.StringBuilder();
                 sb.AppendLine($"Resized {success} of {total} images. {failed} failed.");
                 sb.AppendLine();
-                sb.AppendLine("Errors (Showing the first 25):");
+                sb.AppendLine("Errors (Showing the first 25 that failed):");
                 foreach (var item in failedItems.Take(25))
                 {
                     var src = string.IsNullOrEmpty(item.sourceFolder) ? "(unknown source)" : item.sourceFolder;

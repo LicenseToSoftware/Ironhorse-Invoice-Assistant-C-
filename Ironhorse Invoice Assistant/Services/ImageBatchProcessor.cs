@@ -31,8 +31,8 @@ namespace IronhorseInvoiceAssistant.Services
                 (
                 string sourceFolder,
                 string destinationFolder,
-                int maxWidth = 1600,
-                int maxHeight = 1600,
+                int maxWidth = 1200,
+                int maxHeight = 1200,
                 int quality = 90,
                 bool includeSubfolders = false,
                 bool overwrite = true
@@ -77,7 +77,7 @@ namespace IronhorseInvoiceAssistant.Services
                             continue;
                         }
 
-                        processor.ResizeAndSaveJpeg(
+                        processor.ReduceAndSaveJpeg(
                             sourcePath: file,
                             destinationPath: destPath,
                             maxWidth: maxWidth,

@@ -13,13 +13,13 @@ namespace IronhorseInvoiceAssistant.Services
 {
     public class ImageProcessor
     {
-        public void ResizeAndSaveJpeg
+        public void ReduceAndSaveJpeg
             (
             string sourcePath, 
             string destinationPath,
-            int maxWidth = 1600,
-            int maxHeight = 1600,
-            int quality = 90 // range 0–100, higher = better quality, larger file
+            int maxWidth = 1200,
+            int maxHeight = 1200,
+            int quality = 20 // range 0–100, higher = better quality, larger file
             )
         {
             // Placeholder for image resizing logic
@@ -27,6 +27,8 @@ namespace IronhorseInvoiceAssistant.Services
             // and save it to destinationPath.
             // Implementation would typically use an image processing library like ImageSharp or System.Drawing.
 
+
+            // Error checking
             if (string.IsNullOrWhiteSpace(sourcePath))
                 throw new ArgumentException("Source path is required.", nameof(sourcePath));
 

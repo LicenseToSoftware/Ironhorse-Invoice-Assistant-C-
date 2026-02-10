@@ -10,9 +10,6 @@ namespace IronhorseInvoiceAssistant
 {
     public partial class MainWindow : Form
     {
-        // Stores the user's selected source and destination folder paths
-        public string SelectedSourcePath { get; private set; } = string.Empty;
-        public string SelectedDestinationPath { get; private set; } = string.Empty;
 
         // Constructor: Initializes UI components
         public MainWindow()
@@ -33,13 +30,27 @@ namespace IronhorseInvoiceAssistant
                 folderBrowserSource.Description = "Select Source Folder";
                 if (folderBrowserSource.ShowDialog() == DialogResult.OK)
                 {
-                    SetSourcePath(folderBrowserSource.SelectedPath);
+                    UpdateSourcePathUI(folderBrowserSource.SelectedPath);
                 }
             }
 
         } // End Method SelectFolder_Click
 
-        // TODO: fix this method, i need to make show folders are able to be read and write!
+        // Triggered when the "Select Destination Folder" button is clicked
+        private void buttonSelectFolderDistination_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog folderBrowserDestination = new FolderBrowserDialog())
+            {
+                folderBrowserDestination.Description = "Select Distination Folder";
+                if (folderBrowserDestination.ShowDialog() == DialogResult.OK)
+                {
+                    UpdateDestinationPathUI(folderBrowserDestination.SelectedPath);
+                }
+            }
+        } // End Method buttonSelectFolderDistination_Click
+
+
+        // Triggered when the "Resize Photos" button is clicked
         private async void resizePhoto_Click(object sender, EventArgs e)
         {
 
@@ -106,8 +117,8 @@ namespace IronhorseInvoiceAssistant
                 button?.Invoke(() => button.Enabled = true);
                 Cursor.Current = Cursors.Default;
             }
-        
-        } 
+
+        } // End Method resizePhoto_Click
 
         private void testOutput_TextChanged(object sender, EventArgs e)
         {
@@ -115,26 +126,15 @@ namespace IronhorseInvoiceAssistant
         } // End Method testOutput_TextChanged
 
         // Triggered when the "Select Destination Folder" button is clicked
-        private void buttonSelectFolderDistination_Click(object sender, EventArgs e)
-        {
-            using (FolderBrowserDialog folderBrowserDestination = new FolderBrowserDialog())
-            {
-                folderBrowserDestination.Description = "Select Distination Folder";
-                if (folderBrowserDestination.ShowDialog() == DialogResult.OK)
-                {
-                    SetDestinationPath(folderBrowserDestination.SelectedPath);
-                }
-            }
-        } // End Method buttonSelectFolderDistination_Click
-         
-        // setters
-        private void SetSourcePath(string path)
+
+        // Helper methods to update the UI with the selected paths and validate them
+        private void UpdateSourcePathUI(string path)
         {
             SelectedSourcePath = path;
             textBoxSource.Text = path;
-        }
+        } // End Method UpdateSourcePathUI
 
-        private void SetDestinationPath(string path)
+        private void UpdateDestinationPathUI(string path)
         {
             if (!IsDirectoryWritable(path)) { 
                 MessageBox.Show("The selected destination folder is not writable. Please choose a different folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -142,7 +142,7 @@ namespace IronhorseInvoiceAssistant
             }
             SelectedDestinationPath = path;
             textBoxDestination.Text = path;
-        }
+        } // End Method UpdateDestinationPathUI
 
         // TODO: for helper methods to be moved later
         // None UI move to another class later helper methods
@@ -161,7 +161,35 @@ namespace IronhorseInvoiceAssistant
             {
                 return false;
             }
+        } // End Method IsDirectoryWritable
+
+        // Getters and Setters
+        // Stores the user's selected source and destination folder paths
+
+        private string _selectedSourcePath = string.Empty;
+        public string SelectedSourcePath
+        {
+            get => _selectedSourcePath;
+            private set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("Source path cannot be empty.", nameof(SelectedSourcePath));
+                _selectedSourcePath = value.Trim();
+            }
         }
+
+        private string _selectedDestinationPath = string.Empty;
+        public string SelectedDestinationPath
+        {
+            get => _selectedDestinationPath;
+            private set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("Destination path cannot be empty.", nameof(SelectedDestinationPath));
+                _selectedDestinationPath = value.Trim();
+            }
+        }
+        // end Getters and Setters
 
 
     } // End Class MainWindow

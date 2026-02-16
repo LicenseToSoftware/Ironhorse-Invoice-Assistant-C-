@@ -11,7 +11,8 @@ namespace IronhorseInvoiceAssistant
     public partial class MainWindow : Form
     {
 
-        // Constructor: Initializes UI components
+        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -25,29 +26,35 @@ namespace IronhorseInvoiceAssistant
         // Triggered when the "Select Source Folder" button is clicked
         private void SelectFolder_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog folderBrowserSource = new FolderBrowserDialog())
-            {
-                folderBrowserSource.Description = "Select Source Folder";
-                if (folderBrowserSource.ShowDialog() == DialogResult.OK)
-                {
-                    UpdateSourcePathUI(folderBrowserSource.SelectedPath);
-                }
-            }
-
+           PickFolder
+                (
+                    description:"Select Source Folder", 
+                    onSelected:UpdateSourcePathUI
+                );
         } // End Method SelectFolder_Click
 
         // Triggered when the "Select Destination Folder" button is clicked
         private void buttonSelectFolderDistination_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog folderBrowserDestination = new FolderBrowserDialog())
-            {
-                folderBrowserDestination.Description = "Select Distination Folder";
-                if (folderBrowserDestination.ShowDialog() == DialogResult.OK)
-                {
-                    UpdateDestinationPathUI(folderBrowserDestination.SelectedPath);
-                }
-            }
+            PickFolder
+                (
+                    description: "Select Destination Folder",
+                    onSelected: UpdateDestinationPathUI
+                );
         } // End Method buttonSelectFolderDistination_Click
+
+        private void PickFolder(string description, Action<string> onSelected)
+        {
+            using var dialog = new FolderBrowserDialog
+            {
+                Description = description,
+            };
+            
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                onSelected(dialog.SelectedPath);
+            }
+        }
 
 
         // Triggered when the "Resize Photos" button is clicked

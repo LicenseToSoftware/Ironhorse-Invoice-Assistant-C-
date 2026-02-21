@@ -62,7 +62,7 @@ namespace IronhorseInvoiceAssistant.Services
             var dir = Path.GetDirectoryName(destinationPath);
             if (!Directory.Exists(dir))
             {
-                Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(path: dir);
             }
 
             image.Save(destinationPath, encoder);

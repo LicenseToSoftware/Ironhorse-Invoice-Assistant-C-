@@ -47,8 +47,8 @@ namespace IronhorseInvoiceAssistant.Services
                 sourceFolder = sourceFolder.Trim();
                 destinationFolder = destinationFolder.Trim();
 
-                if (!Directory.Exists(sourceFolder))
-                    throw new DirectoryNotFoundException($"Source folder not found: {sourceFolder}");
+                if (!Directory.Exists(sourceFolder) || !Directory.Exists(destinationFolder))
+                    throw new DirectoryNotFoundException($"Source or Destination folder not found: {sourceFolder},{destinationFolder}");
 
 
                 var supported = new HashSet<string>(StringComparer.OrdinalIgnoreCase)

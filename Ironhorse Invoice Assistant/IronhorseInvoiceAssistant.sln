@@ -4,6 +4,8 @@ VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronhorseInvoiceAssistant", "IronhorseInvoiceAssistant.csproj", "{049BDAAD-66FC-2499-B854-A562228B241C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronhorseInvoiceAssistant.Tests", "..\IronhorseInvoiceAssistant.Tests\IronhorseInvoiceAssistant.Tests.csproj", "{27FE0722-E231-460C-9950-303459B2FDCC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,6 +16,10 @@ Global
 		{049BDAAD-66FC-2499-B854-A562228B241C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{049BDAAD-66FC-2499-B854-A562228B241C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{049BDAAD-66FC-2499-B854-A562228B241C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27FE0722-E231-460C-9950-303459B2FDCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27FE0722-E231-460C-9950-303459B2FDCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27FE0722-E231-460C-9950-303459B2FDCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27FE0722-E231-460C-9950-303459B2FDCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,10 +1,6 @@
 ﻿using IronhorseInvoiceAssistant.Services;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using static IronhorseInvoiceAssistant.Services.ImageBatchProcessor;
 
 namespace IronhorseInvoiceAssistant.Tests.Services
@@ -36,58 +32,142 @@ namespace IronhorseInvoiceAssistant.Tests.Services
             Assert.ThrowsException<DirectoryNotFoundException>(() =>
                 ImageBatchProcessor.ProcessFolder(sourceFolder, destinationFolder));
         }
-    
 
-        /*
-        
+        [TestMethod]
+        public void ProcessFolder_NoSupportedImages_ReturnsEmptyList()
+        {
+            // Arrange: create real temp source + destination folders
+            string sourceFolder = Path.Combine(Path.GetTempPath(), "IH_SRC_" + Guid.NewGuid());
+            string destinationFolder = Path.Combine(Path.GetTempPath(), "IH_DEST_" + Guid.NewGuid());
 
-                        if (!Directory.Exists(sourceFolder))
-                            throw new DirectoryNotFoundException($"Source folder not found: {sourceFolder}");
+            Directory.CreateDirectory(sourceFolder);
+            Directory.CreateDirectory(destinationFolder);
 
+            try
+            {
+                // Put only unsupported files in source
+                File.WriteAllText(Path.Combine(sourceFolder, "notes.txt"), "hello");
+                File.WriteAllText(Path.Combine(sourceFolder, "data.csv"), "a,b,c");
 
-                var supported = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                        { ".jpg", ".jpeg", ".png", ".bmp" };
+                // Act
+                var results = ImageBatchProcessor.ProcessFolder(sourceFolder, destinationFolder);
 
-                var searchOption = includeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+                // Assert
+                Assert.IsNotNull(results);
+                Assert.AreEqual(0, results.Count);
+            }
+            finally
+            {
+                // Cleanup
+                Directory.Delete(sourceFolder, recursive: true);
+                Directory.Delete(destinationFolder, recursive: true);
+            }
+        }
 
-                var files = Directory.EnumerateFiles(sourceFolder, "*.*", searchOption)
-                                     .Where(f => supported.Contains(Path.GetExtension(f)));
+        [TestMethod]
+        public void ProcessFolder_WithOnePng_CreatesJpegInDestination()
+        {
+            // Arrange
+            string sourceFolder = Path.Combine(Path.GetTempPath(), "IH_SRC_" + Guid.NewGuid());
+            string destinationFolder = Path.Combine(Path.GetTempPath(), "IH_DEST_" + Guid.NewGuid());
 
+            Directory.CreateDirectory(sourceFolder);
+            Directory.CreateDirectory(destinationFolder);
 
-                var processor = new ImageProcessor();
-                var results = new List<ImageProcessResult>();
+            try
+            {
+                // Create a real PNG in the source folder
+                string srcPngPath = Path.Combine(sourceFolder, "sample.png");
+                using (var img = new Image<Rgba32>(2000, 1500))
+                {
+                    img.Save(srcPngPath);
+                }
 
-                        foreach (var file in files)
-                        {
-                            try
-                            {
-                                // Keep same filename, but force .jpg extension since we're saving JPEG
-                                var destFileName = Path.ChangeExtension(Path.GetFileName(file), ".jpg");
-                var destPath = Path.Combine(destinationFolder, destFileName);
+                // Act
+                var results = ImageBatchProcessor.ProcessFolder(
+                    sourceFolder: sourceFolder,
+                    destinationFolder: destinationFolder,
+                    maxWidth: 1200,
+                    maxHeight: 1200,
+                    quality: 90,
+                    includeSubfolders: false,
+                    overwrite: true
+                );
 
-                                if (!overwrite && File.Exists(destPath))
-                                {
-                                    results.Add(new ImageProcessResult(file, destPath, false, "Skipped (already exists)."));
-                                    continue;
-                                }
+                // Assert: result list
+                Assert.AreEqual(1, results.Count, "Expected exactly one file to be processed.");
+                Assert.IsTrue(results[0].Success, $"Expected success. Error: {results[0].ErrorMessage}");
 
-            processor.ReduceAndSaveJpeg(
-                sourcePath: file,
-                                    destinationPath: destPath,
-                                    maxWidth: maxWidth,
-                                    maxHeight: maxHeight,
-                                    quality: quality
-                                );
+                // Assert: output file exists and is jpg
+                string outPath = results[0].destinationFolder; // this is your dest file path
+                Assert.IsTrue(File.Exists(outPath), $"Expected output file to exist: {outPath}");
+                Assert.AreEqual(".jpg", Path.GetExtension(outPath).ToLowerInvariant());
 
-                                results.Add(new ImageProcessResult(file, destPath, true));
-                            }
-                            catch (Exception ex)
-                            {
-                                results.Add(new ImageProcessResult(file, "", false, ex.Message));
-                            }
-                        }
+                // Optional: verify it was resized to max bounds
+                using var outImg = Image.Load(outPath);
+                Assert.IsTrue(outImg.Width <= 1200, $"Expected width <= 1200, got {outImg.Width}");
+                Assert.IsTrue(outImg.Height <= 1200, $"Expected height <= 1200, got {outImg.Height}");
+            }
+            finally
+            {
+                Directory.Delete(sourceFolder, recursive: true);
+                Directory.Delete(destinationFolder, recursive: true);
+            }
+        }
 
-                        return results;
-        */
+        [TestMethod]
+        public void ProcessFolder_OverwriteFalse_WhenOutputExists_Skips()
+        {
+            // Arrange
+            string sourceFolder = Path.Combine(Path.GetTempPath(), "IH_SRC_" + Guid.NewGuid());
+            string destinationFolder = Path.Combine(Path.GetTempPath(), "IH_DEST_" + Guid.NewGuid());
+
+            Directory.CreateDirectory(sourceFolder);
+            Directory.CreateDirectory(destinationFolder);
+
+            try
+            {
+                // Create a source PNG
+                string srcPngPath = Path.Combine(sourceFolder, "sample.png");
+                using (var img = new Image<Rgba32>(800, 600))
+                {
+                    img.Save(srcPngPath);
+                }
+
+                // Act 1: First run creates the JPG
+                var first = ImageBatchProcessor.ProcessFolder(
+                    sourceFolder: sourceFolder,
+                    destinationFolder: destinationFolder,
+                    overwrite: true
+                );
+
+                Assert.AreEqual(1, first.Count);
+                Assert.IsTrue(first[0].Success, $"First run should succeed. Error: {first[0].ErrorMessage}");
+
+                // Act 2: Second run should skip because overwrite:false
+                var second = ImageBatchProcessor.ProcessFolder(
+                    sourceFolder: sourceFolder,
+                    destinationFolder: destinationFolder,
+                    overwrite: false
+                );
+
+                // Assert
+                Assert.AreEqual(1, second.Count);
+                Assert.IsFalse(second[0].Success, "Second run should be marked as not successful due to skip.");
+                Assert.IsTrue(
+                    second[0].ErrorMessage?.Contains("Skipped", StringComparison.OrdinalIgnoreCase) == true,
+                    $"Expected 'Skipped' message but got: {second[0].ErrorMessage}"
+                );
+
+                // Also verify the destination file still exists
+                Assert.IsTrue(File.Exists(first[0].destinationFolder));
+            }
+            finally
+            {
+                Directory.Delete(sourceFolder, recursive: true);
+                Directory.Delete(destinationFolder, recursive: true);
+            }
+        }
+
     }
 }

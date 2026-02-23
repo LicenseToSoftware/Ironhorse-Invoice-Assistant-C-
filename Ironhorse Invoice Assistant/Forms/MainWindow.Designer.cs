@@ -74,6 +74,7 @@
             labelResizeImage.Size = new Size(137, 25);
             labelResizeImage.TabIndex = 3;
             labelResizeImage.Text = "Selected Folder:";
+            labelResizeImage.Click += labelResizeImage_Click;
             // 
             // labelOutputLocation
             // 

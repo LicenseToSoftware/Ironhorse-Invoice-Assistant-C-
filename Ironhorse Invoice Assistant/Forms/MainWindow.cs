@@ -21,6 +21,7 @@ namespace IronhorseInvoiceAssistant
         private void Form1_Load(object sender, EventArgs e)
         {
             PopulateWidthHeightComboBox(sender, e);
+            PopulateQualityComboBox(sender, e);
         }
 
         // Triggered when the "Select Source Folder" button is clicked
@@ -90,8 +91,11 @@ namespace IronhorseInvoiceAssistant
                 int maxWidth = selected.Width;
                 int maxHeight = selected.Length;
 
+                // Get the selected image quality from the combo box
+                var imageQuality = (int)cmbxImageQuality.SelectedItem;
+
                 // Run processing off the UI thread
-                var results = await Task.Run(() => ImageBatchProcessor.ProcessFolder(SelectedSourcePath, SelectedDestinationPath, maxWidth, maxHeight));
+                var results = await Task.Run(() => ImageBatchProcessor.ProcessFolder(SelectedSourcePath, SelectedDestinationPath, maxWidth, maxHeight, imageQuality));
 
                 ResizedResults(results);
 
@@ -261,6 +265,17 @@ namespace IronhorseInvoiceAssistant
 
             // Set a default (1200 x 1200)
             cmbxWidthHeight.SelectedItem = options.First(s => s.Length == 1200 && s.Width == 1200);
+        }
+
+        // Populates the image quality combo box with predefined quality values and sets a default selection
+        private void PopulateQualityComboBox(object sender, EventArgs e)
+        {
+            cmbxImageQuality.DataSource = new List<int>
+            {
+                90, 80, 70, 60, 50, 40, 30, 20, 10
+            };
+
+            cmbxImageQuality.SelectedItem = 90;
         }
 
         private void cmbxWidthHeight_SelectedIndexChanged(object sender, EventArgs e)

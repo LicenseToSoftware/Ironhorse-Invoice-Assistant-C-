@@ -1,4 +1,6 @@
+using IronhorseInvoiceAssistant.Models;
 using IronhorseInvoiceAssistant.Services;
+using SixLabors.ImageSharp.Processing;
 using System.Drawing.Text;
 using System.Numerics;
 
@@ -18,7 +20,7 @@ namespace IronhorseInvoiceAssistant
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            PopulateWidthHeightComboBox(sender, e);
         }
 
         // Triggered when the "Select Source Folder" button is clicked
@@ -59,6 +61,7 @@ namespace IronhorseInvoiceAssistant
         {
             string errorMessage;
             string messageBoxTitle;
+            
 
             errorMessage = "Please select a valid source folder before processing.";
             messageBoxTitle = "No Valid Source Folder Selected";
@@ -82,8 +85,13 @@ namespace IronhorseInvoiceAssistant
                 var previousCursor = Cursor.Current;
                 Cursor.Current = Cursors.WaitCursor;
 
+                // Get the selected resize option from the combo box
+                var selected = cmbxWidthHeight.SelectedItem as ResizeOption;
+                int maxWidth = selected.Width;
+                int maxHeight = selected.Length;
+
                 // Run processing off the UI thread
-                var results = await Task.Run(() => ImageBatchProcessor.ProcessFolder(SelectedSourcePath, SelectedDestinationPath));
+                var results = await Task.Run(() => ImageBatchProcessor.ProcessFolder(SelectedSourcePath, SelectedDestinationPath, maxWidth, maxHeight));
 
                 ResizedResults(results);
 
@@ -121,7 +129,7 @@ namespace IronhorseInvoiceAssistant
             textBoxDestination.Text = path;
         } // End Method UpdateDestinationPathUI
 
-        
+
 
         // Getters and Setters
 
@@ -224,6 +232,7 @@ namespace IronhorseInvoiceAssistant
             {
                 var src = string.IsNullOrEmpty(item.sourceFolder) ? "(unknown source)" : item.sourceFolder;
                 var msg = string.IsNullOrEmpty(item.ErrorMessage) ? "(no message)" : item.ErrorMessage;
+                // FIXME: msg should only show jpeg right now, its handled by imagesharp.
                 sb.AppendLine($"{Path.GetFileName(src)} - {msg}");
             }
             if (failedItems.Count > 25)
@@ -235,8 +244,31 @@ namespace IronhorseInvoiceAssistant
             MessageBox.Show(sb.ToString(), "Partial Completion - Errors Occurred", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-private static void ShowInfo(string message, string title) =>
-            MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        private static void ShowInfo(string message, string title) =>
+                    MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        // Populates the width and height combo box with predefined resize options and sets a default selection
+        private void PopulateWidthHeightComboBox(object sender, EventArgs e)
+        {
+            var options = new List<ResizeOption>
+            {
+                new ResizeOption { Length = 1200, Width = 1200 },
+                new ResizeOption { Length = 800, Width = 800 }
+            };
+
+            cmbxWidthHeight.DataSource = options;
+
+
+            // Set a default (1200 x 1200)
+            cmbxWidthHeight.SelectedItem = options.First(s => s.Length == 1200 && s.Width == 1200);
+        }
+
+        private void cmbxWidthHeight_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
 
     } // End Class MainWindow
 } // End Name Space IronhorseInvoiceAssistant

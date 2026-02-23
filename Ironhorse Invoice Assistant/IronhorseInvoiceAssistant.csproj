@@ -12,8 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\" />
-    <Folder Include="Resources\" />
+    <Compile Remove="Helpers\**" />
+    <Compile Remove="Resources\**" />
+    <EmbeddedResource Remove="Helpers\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Helpers\**" />
+    <None Remove="Resources\**" />
   </ItemGroup>
 
   <ItemGroup>

@@ -79,7 +79,7 @@ namespace IronhorseInvoiceAssistant.Services
 
                         processor.ReduceAndSaveJpeg(
                             sourcePath: file,
-                            destinationPath: destPath,
+                            destinationDirectory: destPath,
                             maxWidth: maxWidth,
                             maxHeight: maxHeight,
                             quality: quality

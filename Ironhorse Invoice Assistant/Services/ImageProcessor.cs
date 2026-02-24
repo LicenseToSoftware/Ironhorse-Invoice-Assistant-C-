@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IronhorseInvoiceAssistant.Helpers;
 
 namespace IronhorseInvoiceAssistant.Services
 {
@@ -22,28 +23,29 @@ namespace IronhorseInvoiceAssistant.Services
             int quality = 20 // range 0–100, higher = better quality, larger file
             )
         {
+
+            Guard.AgainstNullOrWhiteSpace(sourcePath, nameof(sourcePath));
+            Guard.AgainstNullOrWhiteSpace(destinationPath, nameof(destinationPath));
+            Guard.AgainstFileNotFound(sourcePath, $"Source image not found, can not resize image.");
+            // FIXME Ensure destination directory does not hold the filepath in the stringname Guard.EnsureDirectoryExist(destinationPath);
+            Guard.AgainstOutOfRange(quality, 0, 100, "JPEG quality must be 0–100.", nameof(quality));
+            Guard.AgainstLessThanOrEqualToZero(maxWidth, nameof(maxWidth));
+            Guard.AgainstLessThanOrEqualToZero(maxHeight, nameof(maxHeight));
             // Placeholder for image resizing logic
             // This method should resize the image at sourcePath to the specified quality
             // and save it to destinationPath.
             // Implementation would typically use an image processing library like ImageSharp or System.Drawing.
 
-
+            /*
             // Error checking
-            if (string.IsNullOrWhiteSpace(sourcePath))
-                throw new ArgumentException("Source path is required.", nameof(sourcePath));
-
-            if (!File.Exists(sourcePath))
-                throw new FileNotFoundException("Source image not found.", sourcePath);
-
-            if (string.IsNullOrWhiteSpace(destinationPath))
-                throw new ArgumentException("Destination path is required.", nameof(destinationPath));
+            
 
             if (quality < 0 || quality > 100)
                 throw new ArgumentOutOfRangeException(nameof(quality), "JPEG quality must be 0–100.");
 
             if (maxWidth <= 0 || maxHeight <= 0)
                 throw new ArgumentOutOfRangeException("Max dimensions must be > 0.");
-
+            */
 
 
             using var image = SharpImage.Load(sourcePath);
@@ -70,6 +72,6 @@ namespace IronhorseInvoiceAssistant.Services
 
         }
 
-
-    }
+    } // End of ImageProcessor class
 }
+ 

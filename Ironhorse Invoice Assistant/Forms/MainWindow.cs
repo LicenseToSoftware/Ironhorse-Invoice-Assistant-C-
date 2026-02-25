@@ -1,5 +1,6 @@
 using IronhorseInvoiceAssistant.Models;
 using IronhorseInvoiceAssistant.Services;
+using IronhorseInvoiceAssistant.Infrastructure;
 using SixLabors.ImageSharp.Processing;
 using System.Drawing.Text;
 using System.Numerics;
@@ -20,8 +21,10 @@ namespace IronhorseInvoiceAssistant
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            SettingsPath.EnsureUserSettingsFile();
             PopulateWidthHeightComboBox(sender, e);
             PopulateQualityComboBox(sender, e);
+
         }
 
         // Triggered when the "Select Source Folder" button is clicked

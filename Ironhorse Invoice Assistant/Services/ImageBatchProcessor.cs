@@ -11,6 +11,9 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace IronhorseInvoiceAssistant.Services
 {
+    /// <summary>
+    /// Provides methods to process batches of images, including resizing and format conversion.
+    /// </summary>
     public static class ImageBatchProcessor
     {
         /// <summary>
@@ -27,7 +30,18 @@ namespace IronhorseInvoiceAssistant.Services
             string? ErrorMessage = null
             );
 
-            public static List<ImageProcessResult> ProcessFolder
+        /// <summary>
+        /// Processes all supported image files in the specified folder, resizing and converting them as needed.
+        /// </summary>
+        /// <param name="sourceFolder">The folder containing original images.</param>
+        /// <param name="destinationFolder">The folder to save processed images.</param>
+        /// <param name="maxWidth">The maximum width for resized images (default = 1200).</param>
+        /// <param name="maxHeight">The maximum height for resized images (default = 1200).</param>
+        /// <param name="quality">The quality for JPEG images (default = 90).</param>
+        /// <param name="includeSubfolders">Whether to include subfolders (default = false).</param>
+        /// <param name="overwrite">Whether to overwrite existing files (default = true).</param>
+        /// <returns>A list of results for each processed image.</returns>
+        public static List<ImageProcessResult> ProcessFolder
                 (
                 string sourceFolder,
                 string destinationFolder,
@@ -63,6 +77,7 @@ namespace IronhorseInvoiceAssistant.Services
                 var processor = new ImageProcessor();
                 var results = new List<ImageProcessResult>();
 
+                // Process each file
                 foreach (var file in files)
                 {
                     try
@@ -79,7 +94,7 @@ namespace IronhorseInvoiceAssistant.Services
 
                         processor.ReduceAndSaveJpeg(
                             sourcePath: file,
-                            destinationDirectory: destPath,
+                            destinationPath: destPath,
                             maxWidth: maxWidth,
                             maxHeight: maxHeight,
                             quality: quality

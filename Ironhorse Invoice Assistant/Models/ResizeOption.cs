@@ -13,12 +13,12 @@ namespace IronhorseInvoiceAssistant.Models
     /// </summary>
     public class ResizeOption
     {
-        public int Length { get; set; }
+        public int Height { get; set; }
         public int Width { get; set; }
 
         public override string ToString()
         {
-            return $"{Length} x {Width}";
+            return $"{Height} x {Width}";
         }
     }
 }

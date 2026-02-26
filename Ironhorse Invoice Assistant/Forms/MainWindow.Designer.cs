@@ -31,7 +31,7 @@
             SelectFolder = new Button();
             buttonResizeImages = new Button();
             textBoxSource = new RichTextBox();
-            labelResizeImage = new Label();
+            labelSelectedImage = new Label();
             labelOutputLocation = new Label();
             textBoxDestination = new RichTextBox();
             buttonSelectFolderDistination = new Button();
@@ -68,17 +68,15 @@
             textBoxSource.Size = new Size(252, 178);
             textBoxSource.TabIndex = 2;
             textBoxSource.Text = "";
-            textBoxSource.TextChanged += testOutput_TextChanged;
             // 
-            // labelResizeImage
+            // labelSelectedImage
             // 
-            labelResizeImage.AutoSize = true;
-            labelResizeImage.Location = new Point(68, 232);
-            labelResizeImage.Name = "labelResizeImage";
-            labelResizeImage.Size = new Size(137, 25);
-            labelResizeImage.TabIndex = 3;
-            labelResizeImage.Text = "Selected Folder:";
-            labelResizeImage.Click += labelResizeImage_Click;
+            labelSelectedImage.AutoSize = true;
+            labelSelectedImage.Location = new Point(68, 232);
+            labelSelectedImage.Name = "labelSelectedImage";
+            labelSelectedImage.Size = new Size(137, 25);
+            labelSelectedImage.TabIndex = 3;
+            labelSelectedImage.Text = "Selected Folder:";
             // 
             // labelOutputLocation
             // 
@@ -105,7 +103,7 @@
             buttonSelectFolderDistination.TabIndex = 4;
             buttonSelectFolderDistination.Text = "Select Folder";
             buttonSelectFolderDistination.UseVisualStyleBackColor = true;
-            buttonSelectFolderDistination.Click += buttonSelectFolderDistination_Click;
+            buttonSelectFolderDistination.Click += SelectFolderDistination_Click;
             // 
             // txtWidthHeight
             // 
@@ -133,7 +131,6 @@
             cmbxWidthHeight.Name = "cmbxWidthHeight";
             cmbxWidthHeight.Size = new Size(182, 33);
             cmbxWidthHeight.TabIndex = 13;
-            cmbxWidthHeight.SelectedIndexChanged += cmbxWidthHeight_SelectedIndexChanged;
             // 
             // cmbxImageQuality
             // 
@@ -155,7 +152,7 @@
             Controls.Add(labelOutputLocation);
             Controls.Add(textBoxDestination);
             Controls.Add(buttonSelectFolderDistination);
-            Controls.Add(labelResizeImage);
+            Controls.Add(labelSelectedImage);
             Controls.Add(textBoxSource);
             Controls.Add(buttonResizeImages);
             Controls.Add(SelectFolder);
@@ -171,7 +168,7 @@
         private Button SelectFolder;
         private Button buttonResizeImages;
         private RichTextBox textBoxSource;
-        private Label labelResizeImage;
+        private Label labelSelectedImage;
         private Label labelOutputLocation;
         private RichTextBox textBoxDestination;
         private Button buttonSelectFolderDistination;

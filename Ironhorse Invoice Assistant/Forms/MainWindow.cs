@@ -1,9 +1,10 @@
+using IronhorseInvoiceAssistant.Infrastructure;
 using IronhorseInvoiceAssistant.Models;
 using IronhorseInvoiceAssistant.Services;
-using IronhorseInvoiceAssistant.Infrastructure;
 using SixLabors.ImageSharp.Processing;
 using System.Drawing.Text;
 using System.Numerics;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 // TODO: for helper methods to be moved later
 
@@ -11,9 +12,6 @@ namespace IronhorseInvoiceAssistant
 {
     public partial class MainWindow : Form
     {
-
-
-
         public MainWindow()
         {
             InitializeComponent();
@@ -27,7 +25,12 @@ namespace IronhorseInvoiceAssistant
 
         }
 
-        // Triggered when the "Select Source Folder" button is clicked
+        /// <summary>
+        /// Handles the click event to prompt the user to select a source folder and updates the UI with the selected
+        /// path.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The event data.</param>
         private void SelectFolder_Click(object sender, EventArgs e)
         {
             PickFolder
@@ -37,15 +40,20 @@ namespace IronhorseInvoiceAssistant
                  );
         } // End Method SelectFolder_Click
 
-        // Triggered when the "Select Destination Folder" button is clicked
-        private void buttonSelectFolderDistination_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Opens a folder selection dialog allowing the user to choose the destination folder
+        /// where processed images will be saved.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SelectFolderDistination_Click(object sender, EventArgs e)
         {
             PickFolder
                 (
                     description: "Select Destination Folder",
                     onSelected: UpdateDestinationPathUI
                 );
-        } // End Method buttonSelectFolderDistination_Click
+        } // End Method SelectFolderDistination_Click
 
         private void PickFolder(string description, Action<string> onSelected)
         {
@@ -65,7 +73,7 @@ namespace IronhorseInvoiceAssistant
         {
             string errorMessage;
             string messageBoxTitle;
-            
+
 
             errorMessage = "Please select a valid source folder before processing.";
             messageBoxTitle = "No Valid Source Folder Selected";
@@ -88,18 +96,17 @@ namespace IronhorseInvoiceAssistant
                 button?.Invoke(() => button.Enabled = false);
                 var previousCursor = Cursor.Current;
                 Cursor.Current = Cursors.WaitCursor;
-
-                // Get the selected resize option from the combo box
-                var selected = cmbxWidthHeight.SelectedItem as ResizeOption;
-                int maxWidth = selected.Width;
-                int maxHeight = selected.Length;
-
-                // Get the selected image quality from the combo box
-                var imageQuality = (int)cmbxImageQuality.SelectedItem;
+                ImageSettings settings = GetImageProcessingSettings(cmbxWidthHeight, cmbxImageQuality);
 
                 // Run processing off the UI thread
-                var results = await Task.Run(() => ImageBatchProcessor.ProcessFolder(SelectedSourcePath, SelectedDestinationPath, maxWidth, maxHeight, imageQuality));
-
+                var results = await Task.Run(() => ImageBatchProcessor.ProcessFolder
+                (
+                    SelectedSourcePath,
+                    SelectedDestinationPath,
+                    settings.MaxWidth,
+                    settings.MaxHeight,
+                    settings.imageQuality
+                ));
                 ResizedResults(results);
 
             }
@@ -111,36 +118,11 @@ namespace IronhorseInvoiceAssistant
 
         } // End Method resizePhoto_Click
 
-        private void testOutput_TextChanged(object sender, EventArgs e)
-        {
-
-        } // End Method testOutput_TextChanged
-
-        // Triggered when the "Select Destination Folder" button is clicked
-
-        // Helper methods to update the UI with the selected paths and validate them
-        private void UpdateSourcePathUI(string path)
-        {
-            SelectedSourcePath = path;
-            textBoxSource.Text = path;
-        } // End Method UpdateSourcePathUI
-
-        private void UpdateDestinationPathUI(string path)
-        {
-            if (!IsDirectoryWritable(path))
-            {
-                MessageBox.Show("The selected destination folder is not writable. Please choose a different folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            SelectedDestinationPath = path;
-            textBoxDestination.Text = path;
-        } // End Method UpdateDestinationPathUI
-
-
-
         // Getters and Setters
 
-        // Getter and Setter for SelectedSourcePath with validation to ensure it is not empty or whitespace, and trims the value before storing it
+        /// <summary>
+        /// Stores the currently selected source path.
+        /// </summary>
         private string _selectedSourcePath = string.Empty;
         public string SelectedSourcePath
         {
@@ -154,13 +136,9 @@ namespace IronhorseInvoiceAssistant
         }
 
         private string _selectedDestinationPath = string.Empty;
-
-        private void labelResizeImage_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        // Getter and Setter for SelectedDestinationPath with validation to ensure it is not empty or whitespace, and trims the value before storing it
+        /// <summary>
+        /// Gets the currently selected destination path.
+        /// </summary>
         public string SelectedDestinationPath
         {
             get => _selectedDestinationPath;
@@ -172,9 +150,42 @@ namespace IronhorseInvoiceAssistant
             }
         }
         // End Getters and Setters
+
         // Helper Methods
 
-        // Helper method to check if a directory is writable by attempting to create and delete a temporary file within it
+        //Sealed Records
+        /// <summary>
+        /// Represents settings for image processing, including maximum dimensions and quality.
+        /// </summary>
+        /// <param name="MaxWidth">The maximum allowed width for the image, in pixels.</param>
+        /// <param name="MaxHeight">The maximum allowed height for the image, in pixels.</param>
+        /// <param name="imageQuality">The quality level of the image, typically as a percentage.</param>
+        private sealed record ImageSettings(
+                int MaxWidth,
+                int MaxHeight,
+                int imageQuality
+                );
+
+        private static ImageSettings GetImageProcessingSettings(ComboBox widthHeightComboBox, ComboBox imageQualityComboBox)
+        {
+            // Get the selected resize option from the combo box
+            var selected = widthHeightComboBox.SelectedItem as ResizeOption ?? throw new InvalidOperationException("Resize Width x Height of image not selected");
+
+            // Get the selected image quality from the combo box
+            int imageQuality = (int)imageQualityComboBox.SelectedItem;
+
+            return new ImageSettings(
+                selected.Width,
+                selected.Height,
+                imageQuality
+                );
+        }
+
+        /// <summary>
+        /// Determines whether the specified directory is writable by attempting to create and delete a temporary file.
+        /// </summary>
+        /// <param name="dirPath">The path of the directory to check for write access.</param>
+        /// <returns>true if the directory is writable; otherwise, false.</returns>
         public static bool IsDirectoryWritable(string dirPath)
         {
             try
@@ -192,7 +203,14 @@ namespace IronhorseInvoiceAssistant
             }
         } // End Method IsDirectoryWritable
 
-        // Validates that the provided path is not null, empty, or whitespace and shows an error message if it is invalid
+        /// <summary>
+        /// Validates that the specified path is not null, empty, or whitespace and displays an error message if
+        /// invalid.
+        /// </summary>
+        /// <param name="SelectedPath">The path to validate.</param>
+        /// <param name="ErrorMessage">The error message to display if the path is invalid.</param>
+        /// <param name="WindowTitle">The title of the error message window.</param>
+        /// <returns>true if the path is valid; otherwise, false.</returns>
         private bool ValidatePath(string SelectedPath, string ErrorMessage, string WindowTitle)
         {
             if (string.IsNullOrWhiteSpace(SelectedPath))
@@ -210,7 +228,11 @@ namespace IronhorseInvoiceAssistant
             }
         }
 
-        // summarizes the results of the image resizing operation and displays appropriate messages to the user based on success and failure counts
+        /// <summary>
+        /// Displays a summary of image processing results, including success and failure counts, and shows detailed
+        /// error information if any images failed to process.
+        /// </summary>
+        /// <param name="results">A list of image processing results to summarize.</param>
         private void ResizedResults(List<ImageBatchProcessor.ImageProcessResult> results)
         {
             int total = results.Count;
@@ -254,23 +276,33 @@ namespace IronhorseInvoiceAssistant
         private static void ShowInfo(string message, string title) =>
                     MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-        // Populates the width and height combo box with predefined resize options and sets a default selection
+        // Combo Box Population Methods
+
+        /// <summary>
+        /// s Populates the width and height combo box with predefined resize options (1200x1200 and 800x800) and sets a default selection to 1200x1200
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PopulateWidthHeightComboBox(object sender, EventArgs e)
         {
             var options = new List<ResizeOption>
             {
-                new ResizeOption { Length = 1200, Width = 1200 },
-                new ResizeOption { Length = 800, Width = 800 }
+                new ResizeOption { Height = 1200, Width = 1200 },
+                new ResizeOption { Height = 800, Width = 800 }
             };
 
             cmbxWidthHeight.DataSource = options;
 
 
             // Set a default (1200 x 1200)
-            cmbxWidthHeight.SelectedItem = options.First(s => s.Length == 1200 && s.Width == 1200);
+            cmbxWidthHeight.SelectedItem = options.First(s => s.Height == 1200 && s.Width == 1200);
         }
 
-        // Populates the image quality combo box with predefined quality values and sets a default selection
+        /// <summary>
+        /// Populates the image quality combo box with predefined quality values and sets the default selection.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The event data.</param>
         private void PopulateQualityComboBox(object sender, EventArgs e)
         {
             cmbxImageQuality.DataSource = new List<int>
@@ -281,12 +313,22 @@ namespace IronhorseInvoiceAssistant
             cmbxImageQuality.SelectedItem = 90;
         }
 
-        private void cmbxWidthHeight_SelectedIndexChanged(object sender, EventArgs e)
+        // Triggered when the "Select Destination Folder" button is clicked
+        private void UpdateSourcePathUI(string path)
         {
+            SelectedSourcePath = path;
+            textBoxSource.Text = path;
+        } // End Method UpdateSourcePathUI
 
-        }
-
-
-
+        private void UpdateDestinationPathUI(string path)
+        {
+            if (!IsDirectoryWritable(path))
+            {
+                MessageBox.Show("The selected destination folder is not writable. Please choose a different folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            SelectedDestinationPath = path;
+            textBoxDestination.Text = path;
+        } // End Method UpdateDestinationPathUI
     } // End Class MainWindow
 } // End Name Space IronhorseInvoiceAssistant

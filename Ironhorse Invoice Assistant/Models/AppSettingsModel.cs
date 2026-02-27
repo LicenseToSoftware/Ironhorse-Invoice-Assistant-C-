@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IronhorseInvoiceAssistant.Models
 {
-    public sealed class AppSettings
+    public class AppSettingsModel
     {
         /// <summary>
         /// Represents the persistent user configuration for the Ironhorse Invoice Assistant.
@@ -16,22 +16,22 @@ namespace IronhorseInvoiceAssistant.Models
         public int Version { get; set; } = 1;
 
         // UI Defaults /Last Used
-        public string? LastSourcePath { get; set; }
+        public string? LastSourcePath { get; set; } = "test in models";
         public string? LastDestinationPath { get; set; }
 
         /// <summary>
         /// Gets or sets the default image width.
         /// </summary>
-        public int DefaultWidth { get; set; } = 1200;
+        public int resizeWidth { get; set; } = 1200;
 
         /// <summary>
         /// Gets or sets the default image height.
         /// </summary>
-        public int DefaultHeight { get; set; } = 1200;
+        public int resizeHeight { get; set; } = 1200;
 
         /// <summary>
         /// Gets or set the default image quality.
         /// </summary>
-        public int DefaultQuality { get; set; } = 90;
+        public int Quality { get; set; } = 90;
     }
 }

@@ -19,6 +19,9 @@ namespace IronhorseInvoiceAssistant
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            var settings = SettingsSevice.Load();
+
+            MessageBox.Show(settings?.LastSourcePath ?? "No source path saved.");
             SettingsPath.EnsureUserSettingsFile();
             PopulateWidthHeightComboBox(sender, e);
             PopulateQualityComboBox(sender, e);

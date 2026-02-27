@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,11 +21,19 @@ namespace IronhorseInvoiceAssistant.Infrastructure
         public static string GetLocalUserSettingsPath()
         {
             string jsonFile = GetJsonFileName();
-            var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "IronhorseInvoiceAssitant");
-
-            Directory.CreateDirectory(folder);
+            var folder = EnsureLocalAppDirectory();
 
             return Path.Combine(folder, jsonFile);
+        }
+
+        //
+        public static string EnsureLocalAppDirectory()
+        {
+            var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "IronhorseInvoiceAssistant");
+
+             Directory.CreateDirectory(folder); // creates directory if missing; does nothing if it already exists
+
+            return folder;
         }
 
         /// <summary>

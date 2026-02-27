@@ -1,8 +1,11 @@
 {
-  "Tests": [
-    {
-      "this": "Is a test",
-      "see" :  "above123"
-    }
-  ]
+  "version": 1,
+
+  "lastSourcePath": "TestingLastSource",
+  "lastDestinationPath": "TestLastDestin",
+
+  "resizeWidth": 1200,
+  "resizeHeight": 1200,
+
+  "quality": 90
 }

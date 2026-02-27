@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using IronhorseInvoiceAssistant.Services;
 
 namespace IronhorseInvoiceAssistant.Infrastructure
 {
@@ -14,15 +15,20 @@ namespace IronhorseInvoiceAssistant.Infrastructure
 
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
-            WriteIndented = true
+            PropertyNameCaseInsensitive = true,
+            WriteIndented = false // modifying object is allowed
         };
 
-        public static AppSettings Load(AppSettings appSettings)
+        public static AppSettingsModel? Load()
         {
-            throw new NotImplementedException();
+            var json = File.ReadAllText(SettingsPath.GetLocalUserSettingsPath());
+
+            AppSettingsModel? settings = JsonSerializer.Deserialize<AppSettingsModel>(json, JsonOptions);
+            
+            return settings;
         }
 
-        public static AppSettings Save(AppSettings appSettings)
+        public static AppSettingsModel Save()
         {
             throw new NotImplementedException();
         }

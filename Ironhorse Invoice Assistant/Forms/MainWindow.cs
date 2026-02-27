@@ -20,25 +20,26 @@ namespace IronhorseInvoiceAssistant
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            LoadSettings();
+            
+            // Load Settings from disk.
+            SettingsPath.EnsureUserSettingsFile();
+            _settings = SettingsSevice.Load();
+
+            // Populate UI
+            PopulateWidthHeightComboBox(sender, e);
+            PopulateQualityComboBox(sender, e);
+            
+            ApplySettingsToUI();
 
             //TODO Remove after debugging
             MessageBox.Show(_settings?.LastSourcePath ?? "No source path saved.");
-            
-            // Populate widgets
-            PopulateWidthHeightComboBox(sender, e);
-            PopulateQualityComboBox(sender, e);
         }
 
         /// <summary>
         /// Loads application settings and restore all users previous selections.
         /// </summary>
-        public void LoadSettings()
+        public void ApplySettingsToUI()
         {
-            // Load appsettings
-            SettingsPath.EnsureUserSettingsFile();
-            _settings = SettingsSevice.Load();
-
             // Restore last used paths into UI + backing properties
             if (!string.IsNullOrWhiteSpace(_settings.LastSourcePath) &&
                 Directory.Exists(_settings.LastSourcePath))
@@ -54,7 +55,28 @@ namespace IronhorseInvoiceAssistant
                 textBoxDestination.Text = _settings.LastDestinationPath;
             }
 
-            //TODO Add image init settings
+
+            if (_settings.Image.ImageQuality >= 0)
+            {
+                cmbxImageQuality.SelectedItem = _settings.Image.ImageQuality;
+            }
+
+            // TODO seperate width and height if user request that functionility.
+            if ((_settings.Image.MaxWidth >= 0) && (_settings.Image.MaxHeight >=0))
+            {
+                // Get the list of available resize presets from the ComboBox
+                var options = (List<ResizeOption>)cmbxWidthHeight.DataSource;
+
+                // Find the preset whose Width and Height match the saved settings
+                var match = options.FirstOrDefault(option =>
+                    option.Width == _settings.Image.MaxWidth &&
+                    option.Height == _settings.Image.MaxHeight);
+
+                // If a matching preset was found, select it in the ComboBox
+                if (match != null)
+                    cmbxWidthHeight.SelectedItem = match;
+            }
+
         }
 
         /// <summary>
@@ -128,7 +150,7 @@ namespace IronhorseInvoiceAssistant
                 button?.Invoke(() => button.Enabled = false);
                 var previousCursor = Cursor.Current;
                 Cursor.Current = Cursors.WaitCursor;
-                ImageSettings settings = GetImageProcessingSettings(cmbxWidthHeight, cmbxImageQuality);
+                ImageSettingsModel settings = GetImageProcessingSettings(cmbxWidthHeight, cmbxImageQuality);
 
                 // Run processing off the UI thread
                 var results = await Task.Run(() => ImageBatchProcessor.ProcessFolder
@@ -137,7 +159,7 @@ namespace IronhorseInvoiceAssistant
                     SelectedDestinationPath,
                     settings.MaxWidth,
                     settings.MaxHeight,
-                    settings.imageQuality
+                    settings.ImageQuality
                 ));
                 ResizedResults(results);
 
@@ -185,32 +207,21 @@ namespace IronhorseInvoiceAssistant
 
         // Helper Methods
 
-        //Sealed Records
-        /// <summary>
-        /// Represents settings for image processing, including maximum dimensions and quality.
-        /// </summary>
-        /// <param name="MaxWidth">The maximum allowed width for the image, in pixels.</param>
-        /// <param name="MaxHeight">The maximum allowed height for the image, in pixels.</param>
-        /// <param name="imageQuality">The quality level of the image, typically as a percentage.</param>
-        private sealed record ImageSettings(
-                int MaxWidth,
-                int MaxHeight,
-                int imageQuality
-                );
-
-        private static ImageSettings GetImageProcessingSettings(ComboBox widthHeightComboBox, ComboBox imageQualityComboBox)
+        private ImageSettingsModel GetImageProcessingSettings(ComboBox widthHeightComboBox, ComboBox imageQualityComboBox)
         {
             // Get the selected resize option from the combo box
             var selected = widthHeightComboBox.SelectedItem as ResizeOption ?? throw new InvalidOperationException("Resize Width x Height of image not selected");
 
             // Get the selected image quality from the combo box
-            int imageQuality = (int)imageQualityComboBox.SelectedItem;
+            int ImageQuality = (int)imageQualityComboBox.SelectedItem;
 
-            return new ImageSettings(
-                selected.Width,
-                selected.Height,
-                imageQuality
-                );
+            _settings.Image.MaxHeight = selected.Height;
+            _settings.Image.MaxWidth = selected.Width;
+            _settings.Image.ImageQuality = ImageQuality;
+
+            SettingsSevice.Save(_settings);
+
+            return _settings.Image;
         }
 
         /// <summary>
@@ -324,7 +335,6 @@ namespace IronhorseInvoiceAssistant
             };
 
             cmbxWidthHeight.DataSource = options;
-
 
             // Set a default (1200 x 1200)
             cmbxWidthHeight.SelectedItem = options.First(s => s.Height == 1200 && s.Width == 1200);

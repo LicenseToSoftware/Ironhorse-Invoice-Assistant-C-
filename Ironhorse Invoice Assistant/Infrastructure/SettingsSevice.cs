@@ -70,6 +70,7 @@ namespace IronhorseInvoiceAssistant.Infrastructure
             string json = JsonSerializer.Serialize(settings, JsonOptions);
             File.WriteAllText(SettingsPath.GetLocalUserSettingsPath(), json);
         }
-        
+
+
     }
 }

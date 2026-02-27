@@ -1,9 +1,11 @@
-﻿using System;
+﻿using IronhorseInvoiceAssistant.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace IronhorseInvoiceAssistant.Infrastructure
@@ -21,6 +23,7 @@ namespace IronhorseInvoiceAssistant.Infrastructure
         public static string GetLocalUserSettingsPath()
         {
             string jsonFile = GetJsonFileName();
+
             var folder = EnsureLocalAppDirectory();
 
             return Path.Combine(folder, jsonFile);
@@ -76,7 +79,13 @@ namespace IronhorseInvoiceAssistant.Infrastructure
                 }
                 else
                 {
-                    File.WriteAllText(userFilePath, "{\n  \"version\": 1\n}\n"); // fallback minimal file
+                    var defaultSettings = new AppSettingsModel();
+
+                    var json = JsonSerializer.Serialize(
+                        defaultSettings,
+                        new JsonSerializerOptions { WriteIndented = true });
+
+                    File.WriteAllText(userFilePath, json);
                 }
             }
             return userFilePath;

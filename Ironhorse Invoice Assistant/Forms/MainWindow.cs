@@ -16,16 +16,45 @@ namespace IronhorseInvoiceAssistant
         {
             InitializeComponent();
         }
+        private AppSettingsModel _settings = null!;
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var settings = SettingsSevice.Load();
+            LoadSettings();
 
-            MessageBox.Show(settings?.LastSourcePath ?? "No source path saved.");
-            SettingsPath.EnsureUserSettingsFile();
+            //TODO Remove after debugging
+            MessageBox.Show(_settings?.LastSourcePath ?? "No source path saved.");
+            
+            // Populate widgets
             PopulateWidthHeightComboBox(sender, e);
             PopulateQualityComboBox(sender, e);
+        }
 
+        /// <summary>
+        /// Loads application settings and restore all users previous selections.
+        /// </summary>
+        public void LoadSettings()
+        {
+            // Load appsettings
+            SettingsPath.EnsureUserSettingsFile();
+            _settings = SettingsSevice.Load();
+
+            // Restore last used paths into UI + backing properties
+            if (!string.IsNullOrWhiteSpace(_settings.LastSourcePath) &&
+                Directory.Exists(_settings.LastSourcePath))
+            {
+                SelectedSourcePath = _settings.LastSourcePath;
+                textBoxSource.Text = _settings.LastSourcePath;
+            }
+
+            if (!string.IsNullOrWhiteSpace(_settings.LastDestinationPath) &&
+                Directory.Exists(_settings.LastDestinationPath))
+            {
+                SelectedDestinationPath = _settings.LastDestinationPath;
+                textBoxDestination.Text = _settings.LastDestinationPath;
+            }
+
+            //TODO Add image init settings
         }
 
         /// <summary>
@@ -320,6 +349,9 @@ namespace IronhorseInvoiceAssistant
         private void UpdateSourcePathUI(string path)
         {
             SelectedSourcePath = path;
+            _settings.LastSourcePath = SelectedSourcePath;
+            SettingsSevice.Save(_settings);
+
             textBoxSource.Text = path;
         } // End Method UpdateSourcePathUI
 
@@ -331,6 +363,9 @@ namespace IronhorseInvoiceAssistant
                 return;
             }
             SelectedDestinationPath = path;
+            _settings.LastDestinationPath = SelectedDestinationPath;
+            SettingsSevice.Save(_settings);
+
             textBoxDestination.Text = path;
         } // End Method UpdateDestinationPathUI
     } // End Class MainWindow

@@ -6,6 +6,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronhorseInvoiceAssistant",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronhorseInvoiceAssistant.Tests", "..\IronhorseInvoiceAssistant.Tests\IronhorseInvoiceAssistant.Tests.csproj", "{27FE0722-E231-460C-9950-303459B2FDCC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronhorseInvoiceAssistant.WinForms", "..\IronhorseInvoiceAssistant.WinForms\IronhorseInvoiceAssistant.WinForms.csproj", "{219CA530-369A-4DA4-8D14-679C6397C5EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronhorseInvoiceAssistant.Domain", "..\IronhorseInvoiceAssistant.Domain\IronhorseInvoiceAssistant.Domain.csproj", "{D3322516-630A-477D-97DE-AE668D6DE457}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronhorseInvoiceAssistant.Application", "..\IronhorseInvoiceAssistant.Application\IronhorseInvoiceAssistant.Application.csproj", "{4820CBD2-A7F0-4D93-A5EB-DB5E2957470B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronhorseInvoiceAssistant.Infrastructure", "..\IronhorseInvoiceAssistant.Infrastructure\IronhorseInvoiceAssistant.Infrastructure.csproj", "{F7A202C1-97E2-4259-838E-F8BE05996659}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +28,22 @@ Global
 		{27FE0722-E231-460C-9950-303459B2FDCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27FE0722-E231-460C-9950-303459B2FDCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27FE0722-E231-460C-9950-303459B2FDCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{219CA530-369A-4DA4-8D14-679C6397C5EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{219CA530-369A-4DA4-8D14-679C6397C5EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{219CA530-369A-4DA4-8D14-679C6397C5EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{219CA530-369A-4DA4-8D14-679C6397C5EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3322516-630A-477D-97DE-AE668D6DE457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3322516-630A-477D-97DE-AE668D6DE457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3322516-630A-477D-97DE-AE668D6DE457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3322516-630A-477D-97DE-AE668D6DE457}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4820CBD2-A7F0-4D93-A5EB-DB5E2957470B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4820CBD2-A7F0-4D93-A5EB-DB5E2957470B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4820CBD2-A7F0-4D93-A5EB-DB5E2957470B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4820CBD2-A7F0-4D93-A5EB-DB5E2957470B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7A202C1-97E2-4259-838E-F8BE05996659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7A202C1-97E2-4259-838E-F8BE05996659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7A202C1-97E2-4259-838E-F8BE05996659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7A202C1-97E2-4259-838E-F8BE05996659}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

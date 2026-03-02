@@ -1,10 +1,7 @@
-﻿using System;
-using SixLabors.ImageSharp; 
-using SixLabors.ImageSharp.Formats;
+﻿using SixLabors.ImageSharp.Formats;
 using SharpImage = SixLabors.ImageSharp.Image;
-using System.IO;
 
-namespace IronhorseInvoiceAssistant.Services
+namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
 {
     /// <summary>
     /// Provides utilities to detect image formats using ImageSharp.

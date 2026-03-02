@@ -1,15 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Formats.Jpeg;
-
-namespace IronhorseInvoiceAssistant.Services
+﻿namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
 {
     /// <summary>
     /// Provides methods to process batches of images, including resizing and format conversion.

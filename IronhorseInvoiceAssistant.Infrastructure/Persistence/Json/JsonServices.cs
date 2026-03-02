@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using IronhorseInvoiceAssistant.Infrastructure;
-using IronhorseInvoiceAssistant.Services;
+﻿using System.Text.Json;
+using IronhorseInvoiceAssistant.Infrastructure.Persistence.Settings;
 
-namespace IronhorseInvoiceAssistant.Services
+namespace IronhorseInvoiceAssistant.Infrastructure.Json
 {
     public class JsonServices
     {

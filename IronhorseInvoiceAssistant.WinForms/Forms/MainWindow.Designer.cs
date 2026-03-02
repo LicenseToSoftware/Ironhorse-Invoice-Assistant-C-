@@ -1,4 +1,4 @@
-﻿namespace IronhorseInvoiceAssistant
+﻿namespace IronhorseInvoiceAssistant.WinForms.Forms
 {
     partial class MainWindow
     {

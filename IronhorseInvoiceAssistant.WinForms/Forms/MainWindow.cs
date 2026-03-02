@@ -1,29 +1,26 @@
-using IronhorseInvoiceAssistant.Infrastructure;
-using IronhorseInvoiceAssistant.Models;
-using IronhorseInvoiceAssistant.Services;
-using SixLabors.ImageSharp.Processing;
-using System.Drawing.Text;
-using System.Numerics;
-using static System.ComponentModel.Design.ObjectSelectorEditor;
+using IronhorseInvoiceAssistant.Domain.Models;
+using IronhorseInvoiceAssistant.Infrastructure.Imaging;
+using IronhorseInvoiceAssistant.Infrastructure.Persistence.Settings;
 
 // TODO: for helper methods to be moved later
 
-namespace IronhorseInvoiceAssistant
+namespace IronhorseInvoiceAssistant.WinForms.Forms
 {
     public partial class MainWindow : Form
     {
+        private AppSettingsModel _settings = null!;
+
         public MainWindow()
         {
             InitializeComponent();
         }
-        private AppSettingsModel _settings = null!;
 
         private void Form1_Load(object sender, EventArgs e)
         {
             
             // Load Settings from disk.
             SettingsPath.EnsureUserSettingsFile();
-            _settings = SettingsSevice.Load();
+            _settings = SettingsService.Load();
 
             // Populate UI
             PopulateWidthHeightComboBox(sender, e);
@@ -109,6 +106,11 @@ namespace IronhorseInvoiceAssistant
                 );
         } // End Method SelectFolderDistination_Click
 
+        /// <summary>
+        /// Displays a folder browser dialog and invokes a callback with the selected folder path.
+        /// </summary>
+        /// <param name="description">The description displayed in the folder browser dialog.</param>
+        /// <param name="onSelected">The callback to invoke with the selected folder path.</param>
         private void PickFolder(string description, Action<string> onSelected)
         {
             using var dialog = new FolderBrowserDialog
@@ -122,7 +124,12 @@ namespace IronhorseInvoiceAssistant
             }
         }
 
-        // Triggered when the "Resize Photos" button is clicked
+        /// <summary>
+        /// Handles the click event to validate source and destination folders, then processes and resizes photos
+        /// asynchronously.
+        /// </summary>
+        /// <param name="sender">The button that triggered the event.</param>
+        /// <param name="e">Event data associated with the click event.</param>
         private async void resizePhoto_Click(object sender, EventArgs e)
         {
             string errorMessage;
@@ -151,6 +158,8 @@ namespace IronhorseInvoiceAssistant
                 var previousCursor = Cursor.Current;
                 Cursor.Current = Cursors.WaitCursor;
                 ImageSettingsModel settings = GetImageProcessingSettings(cmbxWidthHeight, cmbxImageQuality);
+
+
 
                 // Run processing off the UI thread
                 var results = await Task.Run(() => ImageBatchProcessor.ProcessFolder
@@ -219,7 +228,7 @@ namespace IronhorseInvoiceAssistant
             _settings.Image.MaxWidth = selected.Width;
             _settings.Image.ImageQuality = ImageQuality;
 
-            SettingsSevice.Save(_settings);
+            SettingsService.Save(_settings);
 
             return _settings.Image;
         }
@@ -360,7 +369,7 @@ namespace IronhorseInvoiceAssistant
         {
             SelectedSourcePath = path;
             _settings.LastSourcePath = SelectedSourcePath;
-            SettingsSevice.Save(_settings);
+            SettingsService.Save(_settings);
 
             textBoxSource.Text = path;
         } // End Method UpdateSourcePathUI
@@ -374,7 +383,7 @@ namespace IronhorseInvoiceAssistant
             }
             SelectedDestinationPath = path;
             _settings.LastDestinationPath = SelectedDestinationPath;
-            SettingsSevice.Save(_settings);
+            SettingsService.Save(_settings);
 
             textBoxDestination.Text = path;
         } // End Method UpdateDestinationPathUI

@@ -1,4 +1,4 @@
-﻿using IronhorseInvoiceAssistant.Models;
+﻿using IronhorseInvoiceAssistant.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace IronhorseInvoiceAssistant.Infrastructure
+namespace IronhorseInvoiceAssistant.Infrastructure.Persistence.Settings
 {
     /// <summary>
     /// Provides methods to get paths for settings files.

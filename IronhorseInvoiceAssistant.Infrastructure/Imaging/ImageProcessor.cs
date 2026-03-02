@@ -3,14 +3,9 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
 using SharpImage = SixLabors.ImageSharp.Image;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IronhorseInvoiceAssistant.Helpers;
+using IronhorseInvoiceAssistant.Infrastructure.Common;
 
-namespace IronhorseInvoiceAssistant.Services
+namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
 {
     public class ImageProcessor
     {

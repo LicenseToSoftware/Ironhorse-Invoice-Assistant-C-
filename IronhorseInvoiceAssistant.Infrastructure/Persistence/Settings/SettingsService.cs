@@ -1,20 +1,13 @@
-﻿using IronhorseInvoiceAssistant.Models;
-using IronhorseInvoiceAssistant.Services;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using IronhorseInvoiceAssistant.Domain.Models;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace IronhorseInvoiceAssistant.Infrastructure
+namespace IronhorseInvoiceAssistant.Infrastructure.Persistence.Settings
 {
     /// <summary>
     /// Provides functionality for loading and saving user application settings
     /// to a JSON file stored in the local user settings directory.
     /// </summary>
-    public static class SettingsSevice
+    public static class SettingsService
     {
       
         /// /// <summary>

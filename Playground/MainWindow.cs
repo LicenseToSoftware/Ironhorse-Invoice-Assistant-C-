@@ -10,6 +10,8 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
     public partial class MainWindow : Form
     {
         private AppSettingsModel _settings = null!;
+        //TODO Move this
+        ProgressBar progressBar = new ProgressBar();
 
         public MainWindow()
         {
@@ -28,6 +30,9 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
             PopulateQualityComboBox(sender, e);
             
             ApplySettingsToUI();
+
+            
+            
 
             //TODO Remove after debugging
             MessageBox.Show(_settings?.LastSourcePath ?? "No source path saved.");
@@ -161,6 +166,16 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
                 ImageSettingsModel settings = GetImageProcessingSettings(cmbxWidthHeight, cmbxImageQuality);
 
 
+                //TODO move this
+                progressBar.Visible = true;
+                // Set Minimum to 1 to represent the first file being copied.
+                progressBar.Minimum = 1;
+                // Set Maximum to the total number of files to copy.
+                progressBar.Maximum = filenames.Length;
+                // Set the initial value of the ProgressBar.
+                progressBar.Value = 1;
+                // Set the Step property to a value of 1 to represent each file being copied.
+                progressBar.Step = 1;
 
                 // Run processing off the UI thread
                 var results = await Task.Run(() => ImageBatchProcessor.ProcessFolder

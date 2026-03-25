@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronhorseInvoiceAssistant.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronhorseInvoiceAssistant.Infrastructure", "..\IronhorseInvoiceAssistant.Infrastructure\IronhorseInvoiceAssistant.Infrastructure.csproj", "{F7A202C1-97E2-4259-838E-F8BE05996659}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "..\Playground\Playground.csproj", "{1D67C940-5BBA-43AF-9B5A-FA2291A4A5B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{F7A202C1-97E2-4259-838E-F8BE05996659}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7A202C1-97E2-4259-838E-F8BE05996659}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7A202C1-97E2-4259-838E-F8BE05996659}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D67C940-5BBA-43AF-9B5A-FA2291A4A5B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D67C940-5BBA-43AF-9B5A-FA2291A4A5B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D67C940-5BBA-43AF-9B5A-FA2291A4A5B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D67C940-5BBA-43AF-9B5A-FA2291A4A5B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

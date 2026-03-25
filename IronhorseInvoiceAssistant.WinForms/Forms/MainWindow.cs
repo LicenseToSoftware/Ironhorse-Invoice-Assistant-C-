@@ -160,7 +160,16 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
                 Cursor.Current = Cursors.WaitCursor;
                 ImageSettingsModel settings = GetImageProcessingSettings(cmbxWidthHeight, cmbxImageQuality);
 
-
+                // Progress bar logic.
+                var progressForm = new ProgressBarForm();
+                var progress = new Progress<ImageBatchProgress>(p =>
+                {
+                    progressForm.UpdateProgress(p.CurrentFileIndex, p.TotalFileIndex, p.CurrentFileName);
+                });
+                progressForm.Show();
+                progressForm.Refresh();
+                // disable main form while running
+                this.Enabled = false;
 
                 // Run processing off the UI thread
                 var results = await Task.Run(() => ImageBatchProcessor.ProcessFolder
@@ -169,8 +178,12 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
                     SelectedDestinationPath,
                     settings.MaxWidth,
                     settings.MaxHeight,
-                    settings.ImageQuality
+                    settings.ImageQuality,
+                    progress: progress
                 ));
+                progressForm.Close();
+                this.Enabled = true;
+
                 ResizedResults(results);
 
             }

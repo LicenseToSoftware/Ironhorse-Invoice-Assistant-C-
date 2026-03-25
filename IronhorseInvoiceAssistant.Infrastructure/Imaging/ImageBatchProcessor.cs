@@ -1,4 +1,6 @@
-﻿namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
+﻿using IronhorseInvoiceAssistant.Domain.Models;
+
+namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
 {
     /// <summary>
     /// Provides methods to process batches of images, including resizing and format conversion.
@@ -38,7 +40,8 @@
                 int maxHeight = 1200,
                 int quality = 90,
                 bool includeSubfolders = false,
-                bool overwrite = true
+                bool overwrite = true,
+                IProgress<ImageBatchProgress>? progress = null
                 )
             {
                 if (string.IsNullOrWhiteSpace(sourceFolder))
@@ -60,16 +63,26 @@
                 var searchOption = includeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
                 var files = Directory.EnumerateFiles(sourceFolder, "*.*", searchOption)
-                                     .Where(f => supported.Contains(Path.GetExtension(f)));
+                                     .Where(f => supported.Contains(Path.GetExtension(f))).ToList();
 
 
                 var processor = new ImageProcessor();
                 var results = new List<ImageProcessResult>();
 
+                int totalFiles = files.Count;
+                int currentFileIndex = 0;
+
                 // Process each file
                 foreach (var file in files)
                 {
-                    try
+                    currentFileIndex++;
+
+                    progress?.Report(new ImageBatchProgress(
+                        CurrentFileIndex: currentFileIndex,
+                        TotalFileIndex: totalFiles,
+                        CurrentFileName: Path.GetFileName(file)
+                    ));
+                try
                     {
                         // Keep same filename, but force .jpg extension since we're saving JPEG
                         var destFileName = Path.ChangeExtension(Path.GetFileName(file), ".jpg");

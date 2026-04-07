@@ -30,9 +30,6 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
 
             lblStatus.Text = $"Currently proccessing {current} of {total} files";
             lblFileName.Text = filename;
-
-
-
         }
 
         private void lblStatus_Click(object sender, EventArgs e)

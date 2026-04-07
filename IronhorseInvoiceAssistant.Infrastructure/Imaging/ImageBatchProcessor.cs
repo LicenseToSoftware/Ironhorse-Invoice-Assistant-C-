@@ -1,4 +1,5 @@
 ﻿using IronhorseInvoiceAssistant.Domain.Models;
+using IronhorseInvoiceAssistant.Infrastructure.Common;
 
 namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
 {
@@ -42,20 +43,15 @@ namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
                 bool includeSubfolders = false,
                 bool overwrite = true,
                 IProgress<ImageBatchProgress>? progress = null
-                )
+                ){
             {
-                if (string.IsNullOrWhiteSpace(sourceFolder))
-                    throw new ArgumentException("Source folder is required.", nameof(sourceFolder));
-
-                if (string.IsNullOrWhiteSpace(destinationFolder))
-                    throw new ArgumentException("Destination folder is required.", nameof(destinationFolder));
-
+                // Validate inputs
+                Guard.AgainstNullOrWhiteSpace(sourceFolder, nameof(sourceFolder));
+                Guard.AgainstNullOrWhiteSpace(destinationFolder, nameof(destinationFolder));
                 sourceFolder = sourceFolder.Trim();
                 destinationFolder = destinationFolder.Trim();
-
-                if (!Directory.Exists(sourceFolder) || !Directory.Exists(destinationFolder))
-                    throw new DirectoryNotFoundException($"Source or Destination folder not found: {sourceFolder},{destinationFolder}");
-
+                Guard.EnsureDirectoryExist(sourceFolder);
+                Guard.EnsureDirectoryExist(destinationFolder);
 
                 var supported = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                 { ".jpg", ".jpeg", ".png", ".bmp" };
@@ -65,14 +61,11 @@ namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
                 var files = Directory.EnumerateFiles(sourceFolder, "*.*", searchOption)
                                      .Where(f => supported.Contains(Path.GetExtension(f))).ToList();
 
-
                 var processor = new ImageProcessor();
                 var results = new List<ImageProcessResult>();
-
                 int totalFiles = files.Count;
                 int currentFileIndex = 0;
-
-                // Process each file
+                // Report initial progress (0% with no file name)
                 foreach (var file in files)
                 {
                     currentFileIndex++;
@@ -82,7 +75,7 @@ namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
                         TotalFileIndex: totalFiles,
                         CurrentFileName: Path.GetFileName(file)
                     ));
-                try
+                    try
                     {
                         // Keep same filename, but force .jpg extension since we're saving JPEG
                         var destFileName = Path.ChangeExtension(Path.GetFileName(file), ".jpg");
@@ -102,15 +95,26 @@ namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
                             quality: quality
                         );
 
-                        results.Add(new ImageProcessResult(file, destPath, true));
+                        results.Add(new ImageProcessResult(
+                            file,
+                            destPath,
+                            true)
+                        );
                     }
                     catch (Exception ex)
                     {
-                        results.Add(new ImageProcessResult(file, "", false, ex.Message));
+                        results.Add(new ImageProcessResult(
+                            file,
+                            "",
+                            false,
+                            ex.Message));
                     }
                 }
-
                 return results;
             }
         }
+
+
+
     }
+}

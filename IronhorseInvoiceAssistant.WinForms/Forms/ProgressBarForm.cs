@@ -24,11 +24,20 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
 
         public void UpdateProgress(int current, int total, string filename)
         {
+
             progressBar.Maximum = total;
             progressBar.Value = current;
 
             lblStatus.Text = $"Currently proccessing {current} of {total} files";
             lblFileName.Text = filename;
+
+
+
+        }
+
+        private void lblStatus_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

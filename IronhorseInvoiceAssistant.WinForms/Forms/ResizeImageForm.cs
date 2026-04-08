@@ -2,16 +2,17 @@ using IronhorseInvoiceAssistant.Domain.Models;
 using IronhorseInvoiceAssistant.Infrastructure.Imaging;
 using IronhorseInvoiceAssistant.Infrastructure.Persistence.Settings;
 using IronhorseInvoiceAssistant.Infrastructure.FileSystem;
+using IronhorseInvoiceAssistant.WinForms.Forms.Base;
 
 // TODO: for helper methods to be moved later
 
 namespace IronhorseInvoiceAssistant.WinForms.Forms
 {
-    public partial class MainWindow : Form
+    public partial class ResizeImageForm : BaseForm
     {
         private AppSettingsModel _settings = null!;
 
-        public MainWindow()
+        public ResizeImageForm()
         {
             InitializeComponent();
         }
@@ -30,7 +31,7 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
             ApplySettingsToUI();
 
             //TODO Remove after debugging
-            MessageBox.Show(_settings?.LastSourcePath ?? "No source path saved.");
+            //MessageBox.Show(_settings?.LastSourcePath ?? "No source path saved.");
         }
 
         /// <summary>
@@ -166,6 +167,7 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
                 {
                     progressForm.UpdateProgress(p.CurrentFileIndex, p.TotalFileIndex, p.CurrentFileName);
                 });
+                //TODO: prevent user from closing the progress form while processing is underway, or handle that event to cancel processing.
                 progressForm.Show();
                 progressForm.Refresh();
                 // disable main form while running

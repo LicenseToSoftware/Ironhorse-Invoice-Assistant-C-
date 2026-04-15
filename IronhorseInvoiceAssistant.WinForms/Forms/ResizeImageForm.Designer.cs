@@ -39,6 +39,7 @@
             txtImageQuality = new Label();
             cmbxWidthHeight = new ComboBox();
             cmbxImageQuality = new ComboBox();
+            btnListFiles = new Button();
             SuspendLayout();
             // 
             // SelectFolder
@@ -54,7 +55,7 @@
             // buttonResizeImages
             // 
             buttonResizeImages.BackColor = Color.WhiteSmoke;
-            buttonResizeImages.Location = new Point(335, 164);
+            buttonResizeImages.Location = new Point(353, 340);
             buttonResizeImages.Name = "buttonResizeImages";
             buttonResizeImages.Size = new Size(154, 57);
             buttonResizeImages.TabIndex = 1;
@@ -109,7 +110,7 @@
             // txtWidthHeight
             // 
             txtWidthHeight.AutoSize = true;
-            txtWidthHeight.Location = new Point(255, 83);
+            txtWidthHeight.Location = new Point(245, 18);
             txtWidthHeight.Name = "txtWidthHeight";
             txtWidthHeight.Size = new Size(148, 28);
             txtWidthHeight.TabIndex = 10;
@@ -118,7 +119,7 @@
             // txtImageQuality
             // 
             txtImageQuality.AutoSize = true;
-            txtImageQuality.Location = new Point(265, 125);
+            txtImageQuality.Location = new Point(255, 60);
             txtImageQuality.Name = "txtImageQuality";
             txtImageQuality.Size = new Size(138, 28);
             txtImageQuality.TabIndex = 12;
@@ -128,7 +129,7 @@
             // 
             cmbxWidthHeight.AllowDrop = true;
             cmbxWidthHeight.FormattingEnabled = true;
-            cmbxWidthHeight.Location = new Point(411, 80);
+            cmbxWidthHeight.Location = new Point(401, 15);
             cmbxWidthHeight.Name = "cmbxWidthHeight";
             cmbxWidthHeight.Size = new Size(200, 36);
             cmbxWidthHeight.TabIndex = 13;
@@ -136,16 +137,28 @@
             // cmbxImageQuality
             // 
             cmbxImageQuality.FormattingEnabled = true;
-            cmbxImageQuality.Location = new Point(411, 122);
+            cmbxImageQuality.Location = new Point(401, 57);
             cmbxImageQuality.Name = "cmbxImageQuality";
             cmbxImageQuality.Size = new Size(200, 36);
             cmbxImageQuality.TabIndex = 14;
+            // 
+            // btnListFiles
+            // 
+            btnListFiles.BackColor = Color.WhiteSmoke;
+            btnListFiles.Location = new Point(353, 403);
+            btnListFiles.Name = "btnListFiles";
+            btnListFiles.Size = new Size(154, 57);
+            btnListFiles.TabIndex = 15;
+            btnListFiles.Text = "List File Names";
+            btnListFiles.UseVisualStyleBackColor = false;
+            btnListFiles.Click += btnListFiles_Click;
             // 
             // ResizeImageForm
             // 
             AutoScaleDimensions = new SizeF(11F, 28F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(880, 504);
+            Controls.Add(btnListFiles);
             Controls.Add(cmbxImageQuality);
             Controls.Add(cmbxWidthHeight);
             Controls.Add(txtImageQuality);
@@ -177,5 +190,6 @@
         private Label txtImageQuality;
         private ComboBox cmbxWidthHeight;
         private ComboBox cmbxImageQuality;
+        private Button btnListFiles;
     }
 }

@@ -1,8 +1,9 @@
 using IronhorseInvoiceAssistant.Domain.Models;
+using IronhorseInvoiceAssistant.Infrastructure.FileSystem;
 using IronhorseInvoiceAssistant.Infrastructure.Imaging;
 using IronhorseInvoiceAssistant.Infrastructure.Persistence.Settings;
-using IronhorseInvoiceAssistant.Infrastructure.FileSystem;
 using IronhorseInvoiceAssistant.WinForms.Forms.Base;
+using System.Text.RegularExpressions;
 
 // TODO: for helper methods to be moved later
 
@@ -19,7 +20,7 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
             // Load Settings from disk.
             SettingsPath.EnsureUserSettingsFile();
             _settings = SettingsService.Load();
@@ -27,7 +28,7 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
             // Populate UI
             PopulateWidthHeightComboBox(sender, e);
             PopulateQualityComboBox(sender, e);
-            
+
             ApplySettingsToUI();
 
             //TODO Remove after debugging
@@ -61,7 +62,7 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
             }
 
             // TODO seperate width and height if user request that functionility.
-            if ((_settings.Image.MaxWidth >= 0) && (_settings.Image.MaxHeight >=0))
+            if ((_settings.Image.MaxWidth >= 0) && (_settings.Image.MaxHeight >= 0))
             {
                 // Get the list of available resize presets from the ComboBox
                 var options = (List<ResizeOption>)cmbxWidthHeight.DataSource;
@@ -106,7 +107,7 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
                     description: "Select Destination Folder",
                     onSelected: UpdateDestinationPathUI
                 );
-        } 
+        }
 
         /// <summary>
         /// Displays a folder browser dialog and invokes a callback with the selected folder path.
@@ -391,5 +392,35 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms
 
             textBoxDestination.Text = path;
         } // End Method UpdateDestinationPathUI
+
+        // TODO: Make a form that shows the list of files in the destination folder rather than just using a messagebox after processing is complete, with options to open the folder, copy file names to clipboard, etc.
+        private void btnListFiles_Click(object sender, EventArgs e)
+        {
+            var orderedFiles = Directory.GetFiles(SelectedDestinationPath)
+            .OrderBy(f => ExtractNumber(f))
+            .Select(f=> Path.GetFileName(f))
+            .ToList();
+            string message = string.Join(Environment.NewLine, orderedFiles);
+
+            Clipboard.SetText(message);
+
+            MessageBox.Show(message, "Ordered Files");
+      
+        }
+
+        // Helper method to extract the number from the file name for sorting purposes.
+        static int ExtractNumber(string filePath)
+        {
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+
+            var match = Regex.Match(fileName, @"\((\d+)\)");
+
+            if (match.Success)
+            {
+                return int.Parse(match.Groups[1].Value);
+            }
+
+            return int.MaxValue; // fallback if no number found
+        }
     } // End Class MainWindow
 } // End Name Space IronhorseInvoiceAssistant

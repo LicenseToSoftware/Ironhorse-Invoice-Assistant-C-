@@ -177,8 +177,38 @@ Planned features:
 • .NET
 • Windows Forms
 • System.Text.Json
-• SixLabors.ImageSharp
 • Visual Studio
+
+## Third-Party Libraries
+
+# ImageSharp
+
+• Used for image resizing, optimization, and format processing.
+
+Reason for use:
+
+Cross-platform image processing library
+High-quality resizing support
+Modern API compared to System.Drawing
+
+License:
+
+Apache 2.0
+
+# ClosedXML (In Progress)
+
+Will be used for importing and exporting Excel .xlsx files for invoice and reporting workflows.
+
+Reason for planned use:
+
+Simplified Excel handling without requiring Microsoft Excel installation
+Easy worksheet and table manipulation
+Well suited for business reporting workflows
+
+License:
+
+MIT License
+
 
 ---
 

@@ -1,32 +1,14 @@
-﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-
 namespace Playground
 {
-    public class ExcelExportService
+    public class JobLogExcelModel
     {
-        public ExcelExportService()
-        {
-            string filePath = @"C:\Temp\JobLog.xlsx";
-            var jobLogData = new List<JobLogExcelModel>();
-
-            foreach (var job in jobLogData)
-            {
-                // Populate jobLogData with actual data
-                var jobData = new JobLogExcelModel
-                {
-                    JobNumber = row.Cell(1).GetValue<string>(),
-                    Name = row.Cell(2).GetValue<string>(),
-                    Department = row.Cell(3).GetValue<string>(),
-                    Salary = row.Cell(4).GetValue<double>()
-                     public string JobNumber { get; set; }
+       public string JobNumber { get; set; }
         public string Equipment { get; set; }
         public string RentalCompany { get; set; }
         public bool EquipmentPaid { get; set; }
@@ -48,9 +30,5 @@ namespace Playground
         public string? JobInformationAndPaymentStatus { get; set; }
         public decimal? OutstandingOwed { get; set; }
         public string? Quote { get; set; }
-    };
-                jobLogData.Add(employee);
-            }
-        }
     }
 }

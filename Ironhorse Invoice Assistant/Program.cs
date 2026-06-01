@@ -1,3 +1,4 @@
+using IronhorseInvoiceAssistant.WinForm;
 namespace IronhorseInvoiceAssistant
 {
     internal static class Program

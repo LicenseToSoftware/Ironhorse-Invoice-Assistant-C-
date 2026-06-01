@@ -15,6 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="MainWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\ResizeImageForm.cs">
       <SubType>Form</SubType>
     </Compile>

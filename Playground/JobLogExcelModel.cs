@@ -8,7 +8,7 @@ namespace Playground
 {
     public class JobLogExcelModel
     {
-       public string JobNumber { get; set; }
+        public string JobNumber { get; set; }
         public string Equipment { get; set; }
         public string RentalCompany { get; set; }
         public bool EquipmentPaid { get; set; }

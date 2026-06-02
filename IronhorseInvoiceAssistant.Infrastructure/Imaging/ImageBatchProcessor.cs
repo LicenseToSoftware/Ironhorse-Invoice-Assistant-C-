@@ -33,8 +33,7 @@ namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
         /// <param name="includeSubfolders">Whether to include subfolders (default = false).</param>
         /// <param name="overwrite">Whether to overwrite existing files (default = true).</param>
         /// <returns>A list of results for each processed image.</returns>
-        public static List<ImageProcessResult> ProcessFolder
-                (
+        public static List<ImageProcessResult> ProcessFolder(
                 string sourceFolder,
                 string destinationFolder,
                 int maxWidth = 1200,
@@ -43,7 +42,8 @@ namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
                 bool includeSubfolders = false,
                 bool overwrite = true,
                 IProgress<ImageBatchProgress>? progress = null
-                ){
+                )
+        {
             {
                 // Validate inputs
                 Guard.AgainstNullOrWhiteSpace(sourceFolder, nameof(sourceFolder));
@@ -53,13 +53,7 @@ namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
                 Guard.EnsureDirectoryExist(sourceFolder);
                 Guard.EnsureDirectoryExist(destinationFolder);
 
-                var supported = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                { ".jpg", ".jpeg", ".png", ".bmp" };
-
-                var searchOption = includeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
-                var files = Directory.EnumerateFiles(sourceFolder, "*.*", searchOption)
-                                     .Where(f => supported.Contains(Path.GetExtension(f))).ToList();
+                var files = GetSupportedImageFiles(sourceFolder, includeSubfolders);
 
                 var processor = new ImageProcessor();
                 var results = new List<ImageProcessResult>();
@@ -70,16 +64,12 @@ namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
                 {
                     currentFileIndex++;
 
-                    progress?.Report(new ImageBatchProgress(
-                        CurrentFileIndex: currentFileIndex,
-                        TotalFileIndex: totalFiles,
-                        CurrentFileName: Path.GetFileName(file)
-                    ));
+
                     try
                     {
+                        // TODO - Build a system to distuinguish between different image formats and only convert to JPEG if necessary. For now, we'll just convert everything to JPEG since that's what our downstream process expects.
                         // Keep same filename, but force .jpg extension since we're saving JPEG
-                        var destFileName = Path.ChangeExtension(Path.GetFileName(file), ".jpg");
-                        var destPath = Path.Combine(destinationFolder, destFileName);
+                        var destPath = BuildDestinationPathJPG(file, destinationFolder);
 
                         if (!overwrite && File.Exists(destPath))
                         {
@@ -109,12 +99,45 @@ namespace IronhorseInvoiceAssistant.Infrastructure.Imaging
                             false,
                             ex.Message));
                     }
+                    // Report progress after processing each file
+                    progress?.Report(new ImageBatchProgress(
+                        CurrentFileIndex: currentFileIndex,
+                        TotalFileIndex: totalFiles,
+                        CurrentFileName: Path.GetFileName(file)
+                    ));
                 }
                 return results;
             }
         }
 
+        /// <summary>
+        /// Builds the destination file path for a processed image, ensuring it has a .jpg extension and is located in the specified destination folder.
+        /// </summary>
+        /// <param name="sourceFile">The source image file path.</param>
+        /// <param name="destinationFolder">The destination folder where the processed image will be saved.</param>
+        /// <returns>The full path of the destination image file.</returns>
+        private static string BuildDestinationPathJPG(string sourceFile, string destinationFolder)
+        {
+            var destFileName = Path.ChangeExtension(Path.GetFileName(sourceFile), ".jpg");
+            return Path.Combine(destinationFolder, destFileName);
+        }
 
+        /// <summary>
+        /// Gets a list of supported image files from the specified folder, optionally including subfolders.
+        /// </summary>
+        /// <param name="folder">The folder to search for image files.</param>
+        /// <param name="includeSubfolders">Whether to include subfolders in the search.</param>
+        /// <returns>A list of supported image file paths.</returns>
+        private static List<string> GetSupportedImageFiles(string folder, bool includeSubfolders)
+        {
+            var supported = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                { ".jpg", ".jpeg", ".png", ".bmp" };
 
+            var searchOption = includeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+            return Directory.EnumerateFiles(folder, "*.*", searchOption)
+                                 .Where(f => supported.Contains(Path.GetExtension(f))).ToList();
+
+        }
     }
 }

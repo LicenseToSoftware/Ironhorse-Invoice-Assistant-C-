@@ -17,10 +17,4 @@
     <ProjectReference Include="..\IronhorseInvoiceAssistant.Infrastructure\IronhorseInvoiceAssistant.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="MainWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-  </ItemGroup>
-
 </Project>

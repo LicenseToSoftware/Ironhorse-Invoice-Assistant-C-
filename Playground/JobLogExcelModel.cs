@@ -8,17 +8,17 @@ namespace Playground
 {
     public class JobLogExcelModel
     {
-        public string JobNumber { get; set; }
-        public string Equipment { get; set; }
-        public string RentalCompany { get; set; }
-        public bool EquipmentPaid { get; set; }
-        public decimal RentalPrice { get; set; }
+        public string? JobNumber { get; set; }
+        public string? Equipment { get; set; }
+        public string? RentalCompany { get; set; }
+        public bool? EquipmentPaid { get; set; }
+        public decimal? RentalPrice { get; set; }
 
-        public string CompanyName { get; set; }
-        public string ContactNameOrTitle { get; set; }
-        public string PhoneFaxEmail { get; set; }
+        public string? CompanyName { get; set; }
+        public string? ContactNameOrTitle { get; set; }
+        public string? PhoneFaxEmail { get; set; }
 
-        public string JobType { get; set; }
+        public string? JobType { get; set; }
         public string? JobInformationAndNotes { get; set; }
         public DateTime? JobCompletion { get; set; }
 
@@ -28,7 +28,7 @@ namespace Playground
         public string? InvoiceStatus { get; set; }
 
         public string? JobInformationAndPaymentStatus { get; set; }
-        public decimal? OutstandingOwed { get; set; }
+        public string? OutstandingOwed { get; set; }
         public string? Quote { get; set; }
     }
 }

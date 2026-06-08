@@ -1,8 +1,8 @@
 namespace Playground
 {
-    public partial class Form1 : Form
+    public partial class ExcelDataForm : Form
     {
-        public Form1()
+        public ExcelDataForm()
         {
             InitializeComponent();
             var service = new ExcelExportService();

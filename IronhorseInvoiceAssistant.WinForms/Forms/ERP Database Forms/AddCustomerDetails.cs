@@ -22,5 +22,10 @@ namespace IronhorseInvoiceAssistant.WinForms.Forms.ERP_Database_Forms
         {
 
         }
+
+        private void cmbCompanies_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // TODO add logic to populate the form fields with the selected company's details from the SQL database
+        }
     }
 }

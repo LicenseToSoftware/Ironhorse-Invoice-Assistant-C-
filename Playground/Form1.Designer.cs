@@ -1,6 +1,6 @@
 ﻿namespace Playground
 {
-    partial class Form1
+    partial class ExcelDataForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -42,14 +42,14 @@
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
-            // Form1
+            // ExcelDataForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1578, 1356);
             Controls.Add(dataGridView1);
-            Name = "Form1";
-            Text = "Form1";
+            Name = "ExcelDataForm";
+            Text = "Excel Data Form";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }

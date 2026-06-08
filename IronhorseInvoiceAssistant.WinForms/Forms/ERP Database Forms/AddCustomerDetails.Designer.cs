@@ -42,12 +42,14 @@
             txtRegion = new TextBox();
             txtEmail = new TextBox();
             txtPhoneNum = new TextBox();
+            lblCompanyInfo = new Label();
+            lblContactDetails = new Label();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(77, 24);
+            label1.Location = new Point(77, 31);
             label1.Name = "label1";
             label1.Size = new Size(101, 25);
             label1.TabIndex = 0;
@@ -57,7 +59,7 @@
             // lblLastName
             // 
             lblLastName.AutoSize = true;
-            lblLastName.Location = new Point(79, 66);
+            lblLastName.Location = new Point(77, 74);
             lblLastName.Name = "lblLastName";
             lblLastName.Size = new Size(99, 25);
             lblLastName.TabIndex = 1;
@@ -67,7 +69,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(79, 161);
+            label3.Location = new Point(77, 206);
             label3.Name = "label3";
             label3.Size = new Size(81, 25);
             label3.TabIndex = 2;
@@ -76,7 +78,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(79, 199);
+            label4.Location = new Point(77, 249);
             label4.Name = "label4";
             label4.Size = new Size(71, 25);
             label4.TabIndex = 3;
@@ -85,7 +87,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(79, 243);
+            label5.Location = new Point(77, 344);
             label5.Name = "label5";
             label5.Size = new Size(58, 25);
             label5.TabIndex = 4;
@@ -94,7 +96,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(79, 285);
+            label6.Location = new Point(34, 396);
             label6.Name = "label6";
             label6.Size = new Size(136, 25);
             label6.TabIndex = 5;
@@ -103,7 +105,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(79, 113);
+            label7.Location = new Point(77, 154);
             label7.Name = "label7";
             label7.Size = new Size(93, 25);
             label7.TabIndex = 7;
@@ -112,58 +114,88 @@
             // cmbCompanies
             // 
             cmbCompanies.FormattingEnabled = true;
-            cmbCompanies.Location = new Point(178, 110);
+            cmbCompanies.Location = new Point(184, 154);
             cmbCompanies.Name = "cmbCompanies";
-            cmbCompanies.Size = new Size(182, 33);
+            cmbCompanies.Size = new Size(559, 33);
             cmbCompanies.TabIndex = 8;
+            cmbCompanies.Text = "What Company Is Contact With?";
+            cmbCompanies.SelectedIndexChanged += cmbCompanies_SelectedIndexChanged;
             // 
             // txtFirstName
             // 
-            txtFirstName.Location = new Point(184, 24);
+            txtFirstName.Location = new Point(184, 31);
+            txtFirstName.MaxLength = 100;
             txtFirstName.Name = "txtFirstName";
-            txtFirstName.Size = new Size(150, 31);
+            txtFirstName.Size = new Size(559, 31);
             txtFirstName.TabIndex = 9;
             // 
             // txtLastName
             // 
-            txtLastName.Location = new Point(184, 66);
+            txtLastName.Location = new Point(184, 68);
+            txtLastName.MaxLength = 100;
             txtLastName.Name = "txtLastName";
-            txtLastName.Size = new Size(150, 31);
+            txtLastName.Size = new Size(559, 31);
             txtLastName.TabIndex = 10;
             // 
             // txtJobTitle
             // 
-            txtJobTitle.Location = new Point(166, 155);
+            txtJobTitle.Location = new Point(184, 200);
+            txtJobTitle.MaxLength = 100;
             txtJobTitle.Name = "txtJobTitle";
-            txtJobTitle.Size = new Size(150, 31);
+            txtJobTitle.Size = new Size(559, 31);
             txtJobTitle.TabIndex = 11;
+            txtJobTitle.Text = "Enter Job Title.";
             // 
             // txtRegion
             // 
-            txtRegion.Location = new Point(156, 199);
+            txtRegion.Location = new Point(184, 249);
+            txtRegion.MaxLength = 100;
             txtRegion.Name = "txtRegion";
-            txtRegion.Size = new Size(150, 31);
+            txtRegion.Size = new Size(559, 31);
             txtRegion.TabIndex = 12;
+            txtRegion.Text = "What Region Does Contact Operate?";
             // 
             // txtEmail
             // 
-            txtEmail.Location = new Point(143, 240);
+            txtEmail.Location = new Point(184, 344);
+            txtEmail.MaxLength = 100;
             txtEmail.Name = "txtEmail";
-            txtEmail.Size = new Size(150, 31);
+            txtEmail.Size = new Size(559, 31);
             txtEmail.TabIndex = 13;
             // 
             // txtPhoneNum
             // 
-            txtPhoneNum.Location = new Point(221, 285);
+            txtPhoneNum.Location = new Point(184, 390);
+            txtPhoneNum.MaxLength = 20;
             txtPhoneNum.Name = "txtPhoneNum";
-            txtPhoneNum.Size = new Size(150, 31);
+            txtPhoneNum.Size = new Size(559, 31);
             txtPhoneNum.TabIndex = 14;
+            // 
+            // lblCompanyInfo
+            // 
+            lblCompanyInfo.AutoSize = true;
+            lblCompanyInfo.Location = new Point(364, 126);
+            lblCompanyInfo.Name = "lblCompanyInfo";
+            lblCompanyInfo.Size = new Size(130, 25);
+            lblCompanyInfo.TabIndex = 15;
+            lblCompanyInfo.Text = "Company Info:";
+            // 
+            // lblContactDetails
+            // 
+            lblContactDetails.AutoSize = true;
+            lblContactDetails.Location = new Point(353, 307);
+            lblContactDetails.Name = "lblContactDetails";
+            lblContactDetails.Size = new Size(176, 25);
+            lblContactDetails.TabIndex = 16;
+            lblContactDetails.Text = "Contact Information:";
             // 
             // AddCustomerDetails
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(lblContactDetails);
+            Controls.Add(lblCompanyInfo);
             Controls.Add(txtPhoneNum);
             Controls.Add(txtEmail);
             Controls.Add(txtRegion);
@@ -200,5 +232,7 @@
         private TextBox txtRegion;
         private TextBox txtEmail;
         private TextBox txtPhoneNum;
+        private Label lblCompanyInfo;
+        private Label lblContactDetails;
     }
 }

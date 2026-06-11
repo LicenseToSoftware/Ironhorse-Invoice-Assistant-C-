@@ -30,8 +30,8 @@ namespace IronhorseInvoiceAssistant.WinForms
         private void button1_Click(object sender, EventArgs e)
         {
             this.Hide();
-            AddCompanyDetails addCompanyDetailsForm = new AddCompanyDetails();
-            addCompanyDetailsForm.ShowDialog();
+            FormDataBaseConnection FormGetConnectionString = new FormDataBaseConnection();
+            FormGetConnectionString.ShowDialog();
             this.Show();
         }
     }
